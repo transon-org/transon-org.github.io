@@ -1,7 +1,7 @@
 {
   "name": "transon",
   "version": "0.1.0",
-  "homepage": "transon-org.github.io",
+  "homepage": "https://transon-org.github.io",
   "private": true,
   "dependencies": {
     "@monaco-editor/react": "^4.4.6",
