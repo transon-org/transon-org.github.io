@@ -1,0 +1,7 @@
+dl.rule dt {
+  display: table;
+  margin-top: 9px;
+}
+dl.rule dd {
+  margin-left: 40px;
+}
