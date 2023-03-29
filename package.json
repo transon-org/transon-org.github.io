@@ -4,6 +4,7 @@
   "homepage": "https://transon-org.github.io",
   "private": true,
   "dependencies": {
+    "@akebifiky/remark-simple-plantuml": "akebifiky/remark-simple-plantuml",
     "@monaco-editor/react": "^4.4.6",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -19,6 +20,7 @@
     "react-markdown": "^8.0.6",
     "react-scripts": "5.0.1",
     "react-syntax-highlighter": "^15.5.0",
+    "remark-gfm": "^3.0.1",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },

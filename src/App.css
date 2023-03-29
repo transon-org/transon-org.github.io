@@ -2,6 +2,18 @@ dl.rule dt {
   display: table;
   margin-top: 9px;
 }
+
 dl.rule dd {
   margin-left: 40px;
+}
+
+.markdown table td:not(:first-child),
+.markdown table th:not(:first-child) {
+  border-left: 1px solid;
+}
+
+.markdown table td,
+.markdown table th {
+  padding-left: 10px;
+  padding-right: 10px;
 }

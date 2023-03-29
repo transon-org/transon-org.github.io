@@ -1,7 +1,5 @@
-import {IDocsData} from './types'
-
-export const mockedDocs: IDocsData = {
-    "doc": "Transformer class interpolates template with input data.\nFormat of output is defined by template.\nInput is used to fill values into template placeholders.\n\n```python\ntransformer = Transformer(template)\noutput_data = transformer.transform(input_data)\n```\n\nTemplate could be any JSON structure. It will be reflected as is in output except of `rules` structures.\nRules are json objects with special attribute named `$` (this is called marker and can be changed).\nIf the rule has nested template the same applies to it as well. For example\n\n```json\n{\n    \"test\": {\n        \"$\": \"map\",\n        \"item\": [\n            {\n                \"x\": {\n                    \"$\": item\n                }\n            }\n        ]\n    }\n}\n```\n\nAt the top level output will just copy template `{\"test\": ...}`.\nThen the `map` rule will be applied to the input executing sub-template, defined by `item` attribute,\nfor each item in input collection.\nLet's assume that our input is `[1, 2, 3]`.\nInner template contains another rule `{\"$\": \"item\"}` which points to value of items of the input.\nSo the final result will be:\n\n```json\n    {\n    \"test\": [\n        [{\"x\": 1}],\n        [{\"x\": 2}],\n        [{\"x\": 3}],\n    ]\n}\n```\n\nNote that each item preserves its template definition (including list around object).\n\nAll rules are pluggable. There is a list of rules available out of the box.\nHowever, you can easily add your own rules with their own attributes.\n\n```python\n@Transformer.register_rule('my_rule')\ndef my_rule(t: Transformer, template, context: Context):\n    ...\n```\n\nYou can also inherit `Transformer` class and add rules to subclass to avoid functionality collision.\n\n```python\nclass Transformer1(Transformer):\n    pass\n\nclass Transformer2(Transformer):\n    pass\n\n@Transformer1.register_rule('my_rule')\ndef my_rule1(t: Transformer, template, context: Context):\n    ...\n\n@Transformer2.register_rule('my_rule')\ndef my_rule2(t: Transformer, template, context: Context):\n    ...\n```\n\nNote that `my_rule` can be used with both transformers but may behave differently.",
+{
+    "doc": "`Transformer` class interpolates template with input data.\nFormat of output is defined by template.\nInput is used to fill values into template placeholders.\n\n```python\ntransformer = Transformer(template)\noutput_data = transformer.transform(input_data)\n```\n\nTemplate could be any JSON structure. It will be reflected as-is in output, except of `rules` structures.\nRules are json objects with special attribute named `$` (this is called marker and can be changed).\nIf the rule has nested template the same applies to it as well. For example\n\n```json\n{\n    \"test\": {\n        \"$\": \"map\",\n        \"item\": [\n            {\n                \"x\": {\n                    \"$\": item\n                }\n            }\n        ]\n    }\n}\n```\n\nAt the top level output will just copy template `{\"test\": ...}`.\nThen the `map` rule will be applied to the input executing sub-template, defined by `item` attribute,\nfor each item in input collection.\nLet's assume that our input is `[1, 2, 3]`.\nInner template contains another rule `{\"$\": \"item\"}` which points to value of items of the input.\nSo the final result will be:\n\n```json\n    {\n    \"test\": [\n        [{\"x\": 1}],\n        [{\"x\": 2}],\n        [{\"x\": 3}],\n    ]\n}\n```\n\nNote that each item preserves its template definition (including list around object).\n\nAll rules are pluggable. There is a list of rules available out of the box.\nHowever, you can easily add your own rules with their own attributes.\n\n```python\n@Transformer.register_rule('my_rule')\ndef my_rule(t: Transformer, template, context: Context):\n    ...\n```\n\nYou can also inherit `Transformer` class and add rules to subclass to avoid functionality collision.\n\n```python\nclass Transformer1(Transformer):\n    pass\n\nclass Transformer2(Transformer):\n    pass\n\n@Transformer1.register_rule('my_rule')\ndef my_rule1(t: Transformer, template, context: Context):\n    ...\n\n@Transformer2.register_rule('my_rule')\ndef my_rule2(t: Transformer, template, context: Context):\n    ...\n```\n\nNote that `my_rule` can be used with both transformers but may behave differently.\n\nIn same fashion you can also add addition operators for expressions (`expr`) calculations\nand function for values conversion (`convert`) using decorators\n`register_operator` and `register_convertor`.",
     "rules": [
         {
             "rule": {
@@ -175,7 +173,7 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "item",
-                "doc": "Works inside `map` operation when iterating over lists.\nReturns current item."
+                "doc": "Works inside `map` rule when iterating over lists.\nReturns current item."
             },
             "examples": [
                 {
@@ -350,7 +348,7 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "key",
-                "doc": "Works inside `map` operation when iterating over dicts.\nReturns the key of current element."
+                "doc": "Works inside `map` rule when iterating over dicts.\nReturns the key of current element."
             },
             "examples": [
                 {
@@ -444,7 +442,7 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "index",
-                "doc": "Works inside `map` operation.\nReturns 0-based index of iteration."
+                "doc": "Works inside `map` rule.\nReturns 0-based index of iteration."
             },
             "examples": [
                 {
@@ -593,7 +591,7 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "value",
-                "doc": "Works inside `map` operation when iterating over dicts.\nReturns the value of current element."
+                "doc": "Works inside `map` rule when iterating over dicts.\nReturns the value of current element."
             },
             "examples": [
                 {
@@ -687,7 +685,7 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "set",
-                "doc": "Stores in the context value under given name.\nYou can presume that as variable assignment.\nVariable will be accessible under that name in all underlying contexts."
+                "doc": "Stores the value in the context under given name.\nYou can consider this rule as variable assignment.\nVariable will be accessible under that name in all underlying contexts."
             },
             "examples": [
                 {
@@ -1022,14 +1020,14 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "attr",
-                "doc": "TODO: Describe"
+                "doc": "Returns values of attribute or item from current value in context.\nCan search in deeply nested structures with path.\nIf attribute is not present an exception will be thrown."
             },
             "examples": [],
             "params": [
                 {
                     "param": {
                         "name": "name",
-                        "doc": "TODO: Describe"
+                        "doc": "Name of attribute to search. \nIt is possible to use a number as the name for items in arrays. \nCan be dynamic."
                     },
                     "examples": [
                         {
@@ -1152,7 +1150,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "names",
-                        "doc": "TODO: Describe"
+                        "doc": "List of attribute names or indexes to search in nested structure. \nCan be dynamic."
                     },
                     "examples": [
                         {
@@ -1322,7 +1320,7 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "object",
-                "doc": "TODO: Describe"
+                "doc": "Returns a dict with one item.\nThis is useful when you need dynamically named attributes.\nIf you need multiple attributes use `join` or `map`.\nIf `key` or `value` returns no result then the rule returns empty dict."
             },
             "examples": [
                 {
@@ -1386,7 +1384,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "key",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for name of attribute."
                     },
                     "examples": [
                         {
@@ -1408,7 +1406,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "value",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for value of attribute."
                     },
                     "examples": [
                         {
@@ -1432,14 +1430,14 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "map",
-                "doc": "TODO: Describe"
+                "doc": "Iterates over `list` or `dict` and produces new `dict` or `list` with items based on template."
             },
             "examples": [],
             "params": [
                 {
                     "param": {
                         "name": "item",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for items when producing the `list`"
                     },
                     "examples": [
                         {
@@ -1886,7 +1884,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "items",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines templates for series of items when producing the `list`"
                     },
                     "examples": [
                         {
@@ -2026,7 +2024,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "key",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for key when producing the `dict`"
                     },
                     "examples": [
                         {
@@ -2107,7 +2105,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "value",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for value when producing the `dict`"
                     },
                     "examples": [
                         {
@@ -2190,7 +2188,7 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "zip",
-                "doc": "TODO: Describe"
+                "doc": "Works exactly like `zip` function in python.\nConverts collection of lists into list of items.\nAnother way to think of `zip` is that it turns rows into columns, and columns into rows.\nThis is similar to transposing a matrix."
             },
             "examples": [
                 {
@@ -2248,7 +2246,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "items",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines the list of lists"
                     },
                     "examples": []
                 }
@@ -2257,21 +2255,21 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "file",
-                "doc": "TODO: Describe"
+                "doc": "Writes a file using `write_file` delegate (a parameter to `Transformer` constructor).\nThis rule produces no result.\nFile will not be written if `name` or `content` returns no result."
             },
             "examples": [],
             "params": [
                 {
                     "param": {
                         "name": "name",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for file name"
                     },
                     "examples": []
                 },
                 {
                     "param": {
                         "name": "content",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for file content. File content always has JSON formatted data"
                     },
                     "examples": []
                 }
@@ -2280,7 +2278,7 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "join",
-                "doc": "TODO: Describe"
+                "doc": "Joins (concatenates) together several dicts, lists of strings.\nIf items to be concatenated have different types an exception will be thrown."
             },
             "examples": [
                 {
@@ -2542,14 +2540,14 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "items",
-                        "doc": "TODO: Describe"
+                        "doc": "List of values to concatenate."
                     },
                     "examples": []
                 },
                 {
                     "param": {
                         "name": "sep",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines separator for strings concatenation."
                     },
                     "examples": []
                 }
@@ -2558,7 +2556,7 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "chain",
-                "doc": "TODO: Describe"
+                "doc": "Function composition operation.\nBuild function composition and executes it against value in current context.\n`chain(f1, f2, f3)(x) === f3(f2(f1(x)))`\n\nEach function execution creates new context that will be passed to next function.\n```plantuml\n@startuml\nleft to right direction\nrectangle this\nrectangle \"intermediate context\" as i1\nrectangle \"intermediate context\" as i2\nrectangle result\nthis --> i1: f1\ni1 --> i2: f2\ni2 --> result: f3\n@enduml\n```"
             },
             "examples": [
                 {
@@ -2929,7 +2927,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "funcs",
-                        "doc": "TODO: Describe"
+                        "doc": "Define list of templates (not just rules) for chaining"
                     },
                     "examples": []
                 }
@@ -2938,14 +2936,14 @@ export const mockedDocs: IDocsData = {
         {
             "rule": {
                 "name": "expr",
-                "doc": "TODO: Describe"
+                "doc": "Executes unary or binary operation.\nThere are 3 modes of running this rule:\n\n1. **No attributes specified:**\nResult is unary operation calculation against current context value.\n2. **Single `value` specified:**\nResult is binary operation calculation where the\nfirst argument is current values of context and\nthe second is specified value.\n3. **Multiple `values` specified:**\nResult is calculated by applying operation to all values in pairs (reduction).\nIn this case current context value is ignored."
             },
             "examples": [],
             "params": [
                 {
                     "param": {
                         "name": "op",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines name of operation. This is always constant.\n\n###### Possible values:\n\n| operator     | alternative | kind   | types          | result         |\n|--------------|-------------|--------|----------------|----------------|\n| <            | lt          | binary | any            | boolean        |\n| <=           | le          | binary | any            | boolean        |\n| ==           | eq          | binary | any            | boolean        |\n| !=           | ne          | binary | any            | boolean        |\n| >=           | ge          | binary | any            | boolean        |\n| &gt;         | gt          | binary | any            | boolean        |\n| +            | add         | binary | string, number | string, number |\n| -            | sub         | binary | number         | number         |\n| *            | mul         | binary | number         | number         |\n| /            | div         | binary | number         | number         |\n| %            | mod         | binary | number         | number         |\n| &&           | and         | binary | boolean        | boolean        |\n| &#124;&#124; | or          | binary | boolean        | boolean        |\n| !            | not         | unary  | boolean        | boolean        |\n\nYou can use code-style or mnemonic name (i.e. operator or alternative). "
                     },
                     "examples": [
                         {
@@ -2973,7 +2971,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "value",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for single parameter value"
                     },
                     "examples": [
                         {
@@ -3064,7 +3062,7 @@ export const mockedDocs: IDocsData = {
                 {
                     "param": {
                         "name": "values",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for multiple parameters values"
                     },
                     "examples": [
                         {
