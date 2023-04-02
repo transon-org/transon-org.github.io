@@ -16,4 +16,4 @@ def transform(template, data):
     except Exception as error:
         return repr(error)
 
-js.init(dumps(get_all_docs()))
+# js.init(dumps(get_all_docs()))
