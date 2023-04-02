@@ -1,5 +1,5 @@
 import ReactMarkdown from "react-markdown"
-import SyntaxHighlighter from "react-syntax-highlighter"
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter'
 import simplePlantUML from "@akebifiky/remark-simple-plantuml";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism"
 import remarkGfm from "remark-gfm"
