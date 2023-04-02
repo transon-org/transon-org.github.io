@@ -1,5 +1,5 @@
 {
-    "doc": "`Transformer` class interpolates template with input data.\nFormat of output is defined by template.\nInput is used to fill values into template placeholders.\n\n```python\ntransformer = Transformer(template)\noutput_data = transformer.transform(input_data)\n```\n\nTemplate could be any JSON structure. It will be reflected as-is in output, except of `rules` structures.\nRules are json objects with special attribute named `$` (this is called marker and can be changed).\nIf the rule has nested template the same applies to it as well. For example\n\n```json\n{\n    \"test\": {\n        \"$\": \"map\",\n        \"item\": [\n            {\n                \"x\": {\n                    \"$\": item\n                }\n            }\n        ]\n    }\n}\n```\n\nAt the top level output will just copy template `{\"test\": ...}`.\nThen the `map` rule will be applied to the input executing sub-template, defined by `item` attribute,\nfor each item in input collection.\nLet's assume that our input is `[1, 2, 3]`.\nInner template contains another rule `{\"$\": \"item\"}` which points to value of items of the input.\nSo the final result will be:\n\n```json\n    {\n    \"test\": [\n        [{\"x\": 1}],\n        [{\"x\": 2}],\n        [{\"x\": 3}],\n    ]\n}\n```\n\nNote that each item preserves its template definition (including list around object).\n\nAll rules are pluggable. There is a list of rules available out of the box.\nHowever, you can easily add your own rules with their own attributes.\n\n```python\n@Transformer.register_rule('my_rule')\ndef my_rule(t: Transformer, template, context: Context):\n    ...\n```\n\nYou can also inherit `Transformer` class and add rules to subclass to avoid functionality collision.\n\n```python\nclass Transformer1(Transformer):\n    pass\n\nclass Transformer2(Transformer):\n    pass\n\n@Transformer1.register_rule('my_rule')\ndef my_rule1(t: Transformer, template, context: Context):\n    ...\n\n@Transformer2.register_rule('my_rule')\ndef my_rule2(t: Transformer, template, context: Context):\n    ...\n```\n\nNote that `my_rule` can be used with both transformers but may behave differently.\n\nIn same fashion you can also add addition operators for expressions (`expr`) calculations\nand function for values conversion (`convert`) using decorators\n`register_operator` and `register_convertor`.",
+    "doc": "`Transformer` class interpolates template with input data.\nFormat of output is defined by template.\nInput is used to fill values into template placeholders.\n\n```python\ntransformer = Transformer(template)\noutput_data = transformer.transform(input_data)\n```\n\nTemplate could be any JSON structure. It will be reflected as-is in output, except of `rules` structures.\nRules are json objects with special attribute named `$` (this is called marker and can be changed).\nIf the rule has nested template the same applies to it as well. For example\n\n```json\n{\n    \"test\": {\n        \"$\": \"map\",\n        \"item\": [\n            {\n                \"x\": {\n                    \"$\": item\n                }\n            }\n        ]\n    }\n}\n```\n\nAt the top level output will just copy template `{\"test\": ...}`.\nThen the `map` rule will be applied to the input executing sub-template, defined by `item` attribute,\nfor each item in input collection.\nLet's assume that our input is `[1, 2, 3]`.\nInner template contains another rule `{\"$\": \"item\"}` which points to value of items of the input.\nSo the final result will be:\n\n```json\n    {\n    \"test\": [\n        [{\"x\": 1}],\n        [{\"x\": 2}],\n        [{\"x\": 3}],\n    ]\n}\n```\n\nNote that each item preserves its template definition (including list around object).\n\nAll rules are pluggable. There is a list of rules available out of the box.\nHowever, you can easily add your own rules with their own attributes.\n\n```python\n@Transformer.register_rule('my_rule')\ndef my_rule(t: Transformer, template, context: Context):\n    ...\n```\n\nYou can also inherit `Transformer` class and add rules to subclass to avoid functionality collision.\n\n```python\nclass Transformer1(Transformer):\n    pass\n\nclass Transformer2(Transformer):\n    pass\n\n@Transformer1.register_rule('my_rule')\ndef my_rule1(t: Transformer, template, context: Context):\n    ...\n\n@Transformer2.register_rule('my_rule')\ndef my_rule2(t: Transformer, template, context: Context):\n    ...\n```\n\nNote that `my_rule` can be used with both transformers but may behave differently.\n\nIn same fashion you can also add addition operators for expressions (`expr`) calculations\nand function (`call`) using decorators\n`register_operator` and `register_function`.",
     "rules": [
         {
             "rule": {
@@ -9,7 +9,7 @@
             "examples": [
                 {
                     "name": "ExprSimpleValues1",
-                    "doc": "TODO: Describe",
+                    "doc": "Adds suffix to input string.\nIllustrates functionality of `expr` rule with direct parameters.",
                     "template": {
                         "$": "expr",
                         "op": "+",
@@ -25,7 +25,7 @@
                 },
                 {
                     "name": "ExprSimpleValues2",
-                    "doc": "TODO: Describe",
+                    "doc": "Adds prefix to input string.\nIllustrates functionality of `expr` rule with direct parameters.",
                     "template": {
                         "$": "expr",
                         "op": "+",
@@ -41,7 +41,7 @@
                 },
                 {
                     "name": "JoinWithStaticNoOverrides",
-                    "doc": "TODO: Describe",
+                    "doc": "Enriches input dict with default value.",
                     "template": {
                         "$": "join",
                         "items": [
@@ -64,7 +64,7 @@
                 },
                 {
                     "name": "JoinWithStaticWithOverrides",
-                    "doc": "TODO: Describe",
+                    "doc": "Enriches input dict with default value.",
                     "template": {
                         "$": "join",
                         "items": [
@@ -97,7 +97,7 @@
             "examples": [
                 {
                     "name": "ExprSimpleMonads2",
-                    "doc": "TODO: Describe",
+                    "doc": "Adds prefix to input string.\nIllustrates functionality of `expr` rule in form of monad and usage of `parent` rule.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -116,7 +116,7 @@
                 },
                 {
                     "name": "ExprMonadsComplex",
-                    "doc": "TODO: Describe",
+                    "doc": "For input dictionary containing two integers returns sum of squares.\nIllustrates functionality of `expr` rule in form of monad.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -178,30 +178,43 @@
             "examples": [
                 {
                     "name": "MapListToList",
-                    "doc": "TODO: Describe",
+                    "doc": "Maps two lists obtained from different attributes of input.\nThen joins two obtained lists into single resulting list.",
                     "template": {
-                        "$": "chain",
-                        "funcs": [
+                        "$": "join",
+                        "items": [
                             {
-                                "$": "join",
-                                "items": [
+                                "$": "chain",
+                                "funcs": [
                                     {
                                         "$": "attr",
                                         "name": "first"
                                     },
                                     {
-                                        "$": "attr",
-                                        "name": "second"
+                                        "$": "map",
+                                        "item": {
+                                            "first": {
+                                                "$": "item"
+                                            }
+                                        }
                                     }
                                 ]
                             },
                             {
-                                "$": "map",
-                                "item": {
-                                    "value": {
-                                        "$": "item"
+                                "$": "chain",
+                                "funcs": [
+                                    {
+                                        "$": "attr",
+                                        "name": "second"
+                                    },
+                                    {
+                                        "$": "map",
+                                        "item": {
+                                            "second": {
+                                                "$": "item"
+                                            }
+                                        }
                                     }
-                                }
+                                ]
                             }
                         ]
                     },
@@ -219,28 +232,28 @@
                     },
                     "result": [
                         {
-                            "value": 1
+                            "first": 1
                         },
                         {
-                            "value": 2
+                            "first": 2
                         },
                         {
-                            "value": 3
+                            "first": 3
                         },
                         {
-                            "value": 4
+                            "second": 4
                         },
                         {
-                            "value": 5
+                            "second": 5
                         },
                         {
-                            "value": 6
+                            "second": 6
                         }
                     ]
                 },
                 {
                     "name": "NoContentForMappingList",
-                    "doc": "TODO: Describe",
+                    "doc": "Demonstrates skipping of items in `list` generation by `map` rule when they have no value.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -282,65 +295,6 @@
                         2,
                         "yyy"
                     ]
-                },
-                {
-                    "name": "NoContentForMappingDict",
-                    "doc": "TODO: Describe",
-                    "template": {
-                        "$": "chain",
-                        "funcs": [
-                            [
-                                {
-                                    "key": {
-                                        "$": "attr",
-                                        "name": "x"
-                                    },
-                                    "value": {
-                                        "$": "get",
-                                        "name": "nope"
-                                    }
-                                },
-                                {
-                                    "key": {
-                                        "$": "get",
-                                        "name": "nope"
-                                    },
-                                    "value": {
-                                        "$": "attr",
-                                        "name": "y"
-                                    }
-                                },
-                                {
-                                    "key": {
-                                        "$": "attr",
-                                        "name": "x"
-                                    },
-                                    "value": {
-                                        "$": "attr",
-                                        "name": "y"
-                                    }
-                                }
-                            ],
-                            {
-                                "$": "map",
-                                "key": {
-                                    "$": "attr",
-                                    "name": "key"
-                                },
-                                "value": {
-                                    "$": "attr",
-                                    "name": "value"
-                                }
-                            }
-                        ]
-                    },
-                    "data": {
-                        "x": "xxx",
-                        "y": "yyy"
-                    },
-                    "result": {
-                        "xxx": "yyy"
-                    }
                 }
             ],
             "params": []
@@ -353,7 +307,7 @@
             "examples": [
                 {
                     "name": "MapDictToList",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over input dict and produces list of dicts with corresponding fields for keys and values.",
                     "template": {
                         "$": "map",
                         "item": {
@@ -387,7 +341,7 @@
                 },
                 {
                     "name": "MapDictToDictItems",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over input dictionary and produces dictionary with keys and values swapped.",
                     "template": {
                         "$": "map",
                         "key": {
@@ -410,7 +364,7 @@
                 },
                 {
                     "name": "MapDictToListItems",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over input dictionary and produces interlaced list of both keys and values.",
                     "template": {
                         "$": "map",
                         "items": [
@@ -447,7 +401,7 @@
             "examples": [
                 {
                     "name": "FormatWithValue",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over list of values.\nFor formatting value creates dict with dynamically calculated values.\nProduces list of strings using formatting.",
                     "template": {
                         "$": "map",
                         "item": {
@@ -483,7 +437,7 @@
                 },
                 {
                     "name": "NoContentForMappingList",
-                    "doc": "TODO: Describe",
+                    "doc": "Demonstrates skipping of items in `list` generation by `map` rule when they have no value.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -525,65 +479,6 @@
                         2,
                         "yyy"
                     ]
-                },
-                {
-                    "name": "NoContentForMappingDict",
-                    "doc": "TODO: Describe",
-                    "template": {
-                        "$": "chain",
-                        "funcs": [
-                            [
-                                {
-                                    "key": {
-                                        "$": "attr",
-                                        "name": "x"
-                                    },
-                                    "value": {
-                                        "$": "get",
-                                        "name": "nope"
-                                    }
-                                },
-                                {
-                                    "key": {
-                                        "$": "get",
-                                        "name": "nope"
-                                    },
-                                    "value": {
-                                        "$": "attr",
-                                        "name": "y"
-                                    }
-                                },
-                                {
-                                    "key": {
-                                        "$": "attr",
-                                        "name": "x"
-                                    },
-                                    "value": {
-                                        "$": "attr",
-                                        "name": "y"
-                                    }
-                                }
-                            ],
-                            {
-                                "$": "map",
-                                "key": {
-                                    "$": "attr",
-                                    "name": "key"
-                                },
-                                "value": {
-                                    "$": "attr",
-                                    "name": "value"
-                                }
-                            }
-                        ]
-                    },
-                    "data": {
-                        "x": "xxx",
-                        "y": "yyy"
-                    },
-                    "result": {
-                        "xxx": "yyy"
-                    }
                 }
             ],
             "params": []
@@ -596,7 +491,7 @@
             "examples": [
                 {
                     "name": "MapDictToList",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over input dict and produces list of dicts with corresponding fields for keys and values.",
                     "template": {
                         "$": "map",
                         "item": {
@@ -630,7 +525,7 @@
                 },
                 {
                     "name": "MapDictToDictItems",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over input dictionary and produces dictionary with keys and values swapped.",
                     "template": {
                         "$": "map",
                         "key": {
@@ -653,7 +548,7 @@
                 },
                 {
                     "name": "MapDictToListItems",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over input dictionary and produces interlaced list of both keys and values.",
                     "template": {
                         "$": "map",
                         "items": [
@@ -857,7 +752,7 @@
                 },
                 {
                     "name": "NoContentForAttr",
-                    "doc": "TODO: Describe",
+                    "doc": "Gets variable names `foo` that does not exist from context.\nThen tries to get attribute named `bar` of non-existing value.\nThis results into no value which translates into `None`.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -876,7 +771,7 @@
                 },
                 {
                     "name": "NoContentForObjectKey",
-                    "doc": "TODO: Describe",
+                    "doc": "Creates a dict with item key that has no value.\nIt results with empty object.",
                     "template": {
                         "$": "object",
                         "key": {
@@ -890,7 +785,7 @@
                 },
                 {
                     "name": "NoContentForObjectValue",
-                    "doc": "TODO: Describe",
+                    "doc": "Creates a dict with item value that has no value.\nIt results with empty object.",
                     "template": {
                         "$": "object",
                         "key": "foo",
@@ -904,7 +799,7 @@
                 },
                 {
                     "name": "NoContentForMappingList",
-                    "doc": "TODO: Describe",
+                    "doc": "Demonstrates skipping of items in `list` generation by `map` rule when they have no value.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -949,7 +844,7 @@
                 },
                 {
                     "name": "NoContentForMappingDict",
-                    "doc": "TODO: Describe",
+                    "doc": "Demonstrates skipping of items in `dict` generation by `map` rule when they have no value.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -1020,7 +915,7 @@
         {
             "rule": {
                 "name": "attr",
-                "doc": "Returns values of attribute or item from current value in context.\nCan search in deeply nested structures with path.\nIf attribute is not present an exception will be thrown."
+                "doc": "Returns values of attribute or item from current value in context.\nCan search in deeply nested structures with path.\nIf attribute is not present an exception will be thrown.\n\nParameters are mutually exclusive."
             },
             "examples": [],
             "params": [
@@ -1078,7 +973,7 @@
                         },
                         {
                             "name": "MapListsToDict",
-                            "doc": "TODO: Describe",
+                            "doc": "Zips two lists containing keys and values together into pairs.\nThen iterates over list of pairs and produces resulting dict.",
                             "template": {
                                 "$": "chain",
                                 "funcs": [
@@ -1128,7 +1023,7 @@
                         },
                         {
                             "name": "NoContentForAttr",
-                            "doc": "TODO: Describe",
+                            "doc": "Gets variable names `foo` that does not exist from context.\nThen tries to get attribute named `bar` of non-existing value.\nThis results into no value which translates into `None`.",
                             "template": {
                                 "$": "chain",
                                 "funcs": [
@@ -1325,7 +1220,7 @@
             "examples": [
                 {
                     "name": "JoinManyDynamicDicts",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over input list twice.\nFirst time produces list of `dicts` with keys and values defined in separate attributes of input items.\nSecond time produces list of `dicts` but with keys and values swapped.\nJoins together results of two iteration into single list.\nThen joins together items of the list into single resulting object.",
                     "template": {
                         "$": "join",
                         "items": {
@@ -1389,7 +1284,7 @@
                     "examples": [
                         {
                             "name": "NoContentForObjectKey",
-                            "doc": "TODO: Describe",
+                            "doc": "Creates a dict with item key that has no value.\nIt results with empty object.",
                             "template": {
                                 "$": "object",
                                 "key": {
@@ -1411,7 +1306,7 @@
                     "examples": [
                         {
                             "name": "NoContentForObjectValue",
-                            "doc": "TODO: Describe",
+                            "doc": "Creates a dict with item value that has no value.\nIt results with empty object.",
                             "template": {
                                 "$": "object",
                                 "key": "foo",
@@ -1602,7 +1497,7 @@
                         },
                         {
                             "name": "FormatFromSingleValue",
-                            "doc": "TODO: Describe",
+                            "doc": "Iterates list with floats and produces list of strings by formatting each item.",
                             "template": {
                                 "$": "map",
                                 "item": {
@@ -1633,7 +1528,7 @@
                         },
                         {
                             "name": "FormatFromDict",
-                            "doc": "TODO: Describe",
+                            "doc": "Iterates over list of dicts and produces list of string using items for filling pattern slots.",
                             "template": {
                                 "$": "map",
                                 "item": {
@@ -1663,7 +1558,7 @@
                         },
                         {
                             "name": "FormatFromList",
-                            "doc": "TODO: Describe",
+                            "doc": "Iterates over list of lists and produces list of string using items for filling pattern slots.",
                             "template": {
                                 "$": "map",
                                 "item": {
@@ -1693,7 +1588,7 @@
                         },
                         {
                             "name": "FormatWithValue",
-                            "doc": "TODO: Describe",
+                            "doc": "Iterates over list of values.\nFor formatting value creates dict with dynamically calculated values.\nProduces list of strings using formatting.",
                             "template": {
                                 "$": "map",
                                 "item": {
@@ -1729,7 +1624,7 @@
                         },
                         {
                             "name": "JoinManyDynamicDicts",
-                            "doc": "TODO: Describe",
+                            "doc": "Iterates over input list twice.\nFirst time produces list of `dicts` with keys and values defined in separate attributes of input items.\nSecond time produces list of `dicts` but with keys and values swapped.\nJoins together results of two iteration into single list.\nThen joins together items of the list into single resulting object.",
                             "template": {
                                 "$": "join",
                                 "items": {
@@ -1785,30 +1680,43 @@
                         },
                         {
                             "name": "MapListToList",
-                            "doc": "TODO: Describe",
+                            "doc": "Maps two lists obtained from different attributes of input.\nThen joins two obtained lists into single resulting list.",
                             "template": {
-                                "$": "chain",
-                                "funcs": [
+                                "$": "join",
+                                "items": [
                                     {
-                                        "$": "join",
-                                        "items": [
+                                        "$": "chain",
+                                        "funcs": [
                                             {
                                                 "$": "attr",
                                                 "name": "first"
                                             },
                                             {
-                                                "$": "attr",
-                                                "name": "second"
+                                                "$": "map",
+                                                "item": {
+                                                    "first": {
+                                                        "$": "item"
+                                                    }
+                                                }
                                             }
                                         ]
                                     },
                                     {
-                                        "$": "map",
-                                        "item": {
-                                            "value": {
-                                                "$": "item"
+                                        "$": "chain",
+                                        "funcs": [
+                                            {
+                                                "$": "attr",
+                                                "name": "second"
+                                            },
+                                            {
+                                                "$": "map",
+                                                "item": {
+                                                    "second": {
+                                                        "$": "item"
+                                                    }
+                                                }
                                             }
-                                        }
+                                        ]
                                     }
                                 ]
                             },
@@ -1826,28 +1734,28 @@
                             },
                             "result": [
                                 {
-                                    "value": 1
+                                    "first": 1
                                 },
                                 {
-                                    "value": 2
+                                    "first": 2
                                 },
                                 {
-                                    "value": 3
+                                    "first": 3
                                 },
                                 {
-                                    "value": 4
+                                    "second": 4
                                 },
                                 {
-                                    "value": 5
+                                    "second": 5
                                 },
                                 {
-                                    "value": 6
+                                    "second": 6
                                 }
                             ]
                         },
                         {
                             "name": "MapDictToList",
-                            "doc": "TODO: Describe",
+                            "doc": "Iterates over input dict and produces list of dicts with corresponding fields for keys and values.",
                             "template": {
                                 "$": "map",
                                 "item": {
@@ -1889,7 +1797,7 @@
                     "examples": [
                         {
                             "name": "MapDictToListItems",
-                            "doc": "TODO: Describe",
+                            "doc": "Iterates over input dictionary and produces interlaced list of both keys and values.",
                             "template": {
                                 "$": "map",
                                 "items": [
@@ -1917,7 +1825,7 @@
                         },
                         {
                             "name": "NoContentForMappingList",
-                            "doc": "TODO: Describe",
+                            "doc": "Demonstrates skipping of items in `list` generation by `map` rule when they have no value.",
                             "template": {
                                 "$": "chain",
                                 "funcs": [
@@ -1959,10 +1867,91 @@
                                 2,
                                 "yyy"
                             ]
+                        }
+                    ]
+                },
+                {
+                    "param": {
+                        "name": "key",
+                        "doc": "Defines template for key when producing the `dict`"
+                    },
+                    "examples": [
+                        {
+                            "name": "MapDictToDictItems",
+                            "doc": "Iterates over input dictionary and produces dictionary with keys and values swapped.",
+                            "template": {
+                                "$": "map",
+                                "key": {
+                                    "$": "value"
+                                },
+                                "value": {
+                                    "$": "key"
+                                }
+                            },
+                            "data": {
+                                "a": "d",
+                                "b": "e",
+                                "c": "f"
+                            },
+                            "result": {
+                                "d": "a",
+                                "e": "b",
+                                "f": "c"
+                            }
+                        },
+                        {
+                            "name": "MapListsToDict",
+                            "doc": "Zips two lists containing keys and values together into pairs.\nThen iterates over list of pairs and produces resulting dict.",
+                            "template": {
+                                "$": "chain",
+                                "funcs": [
+                                    {
+                                        "$": "zip",
+                                        "items": [
+                                            {
+                                                "$": "attr",
+                                                "name": "keys"
+                                            },
+                                            {
+                                                "$": "attr",
+                                                "name": "values"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "$": "map",
+                                        "key": {
+                                            "$": "attr",
+                                            "name": 0
+                                        },
+                                        "value": {
+                                            "$": "attr",
+                                            "name": 1
+                                        }
+                                    }
+                                ]
+                            },
+                            "data": {
+                                "keys": [
+                                    "a",
+                                    "b",
+                                    "c"
+                                ],
+                                "values": [
+                                    1,
+                                    2,
+                                    3
+                                ]
+                            },
+                            "result": {
+                                "a": 1,
+                                "b": 2,
+                                "c": 3
+                            }
                         },
                         {
                             "name": "NoContentForMappingDict",
-                            "doc": "TODO: Describe",
+                            "doc": "Demonstrates skipping of items in `dict` generation by `map` rule when they have no value.",
                             "template": {
                                 "$": "chain",
                                 "funcs": [
@@ -2023,94 +2012,13 @@
                 },
                 {
                     "param": {
-                        "name": "key",
-                        "doc": "Defines template for key when producing the `dict`"
-                    },
-                    "examples": [
-                        {
-                            "name": "MapDictToDictItems",
-                            "doc": "TODO: Describe",
-                            "template": {
-                                "$": "map",
-                                "key": {
-                                    "$": "value"
-                                },
-                                "value": {
-                                    "$": "key"
-                                }
-                            },
-                            "data": {
-                                "a": "d",
-                                "b": "e",
-                                "c": "f"
-                            },
-                            "result": {
-                                "d": "a",
-                                "e": "b",
-                                "f": "c"
-                            }
-                        },
-                        {
-                            "name": "MapListsToDict",
-                            "doc": "TODO: Describe",
-                            "template": {
-                                "$": "chain",
-                                "funcs": [
-                                    {
-                                        "$": "zip",
-                                        "items": [
-                                            {
-                                                "$": "attr",
-                                                "name": "keys"
-                                            },
-                                            {
-                                                "$": "attr",
-                                                "name": "values"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "$": "map",
-                                        "key": {
-                                            "$": "attr",
-                                            "name": 0
-                                        },
-                                        "value": {
-                                            "$": "attr",
-                                            "name": 1
-                                        }
-                                    }
-                                ]
-                            },
-                            "data": {
-                                "keys": [
-                                    "a",
-                                    "b",
-                                    "c"
-                                ],
-                                "values": [
-                                    1,
-                                    2,
-                                    3
-                                ]
-                            },
-                            "result": {
-                                "a": 1,
-                                "b": 2,
-                                "c": 3
-                            }
-                        }
-                    ]
-                },
-                {
-                    "param": {
                         "name": "value",
                         "doc": "Defines template for value when producing the `dict`"
                     },
                     "examples": [
                         {
                             "name": "MapDictToDictItems",
-                            "doc": "TODO: Describe",
+                            "doc": "Iterates over input dictionary and produces dictionary with keys and values swapped.",
                             "template": {
                                 "$": "map",
                                 "key": {
@@ -2133,7 +2041,7 @@
                         },
                         {
                             "name": "MapListsToDict",
-                            "doc": "TODO: Describe",
+                            "doc": "Zips two lists containing keys and values together into pairs.\nThen iterates over list of pairs and produces resulting dict.",
                             "template": {
                                 "$": "chain",
                                 "funcs": [
@@ -2179,6 +2087,65 @@
                                 "a": 1,
                                 "b": 2,
                                 "c": 3
+                            }
+                        },
+                        {
+                            "name": "NoContentForMappingDict",
+                            "doc": "Demonstrates skipping of items in `dict` generation by `map` rule when they have no value.",
+                            "template": {
+                                "$": "chain",
+                                "funcs": [
+                                    [
+                                        {
+                                            "key": {
+                                                "$": "attr",
+                                                "name": "x"
+                                            },
+                                            "value": {
+                                                "$": "get",
+                                                "name": "nope"
+                                            }
+                                        },
+                                        {
+                                            "key": {
+                                                "$": "get",
+                                                "name": "nope"
+                                            },
+                                            "value": {
+                                                "$": "attr",
+                                                "name": "y"
+                                            }
+                                        },
+                                        {
+                                            "key": {
+                                                "$": "attr",
+                                                "name": "x"
+                                            },
+                                            "value": {
+                                                "$": "attr",
+                                                "name": "y"
+                                            }
+                                        }
+                                    ],
+                                    {
+                                        "$": "map",
+                                        "key": {
+                                            "$": "attr",
+                                            "name": "key"
+                                        },
+                                        "value": {
+                                            "$": "attr",
+                                            "name": "value"
+                                        }
+                                    }
+                                ]
+                            },
+                            "data": {
+                                "x": "xxx",
+                                "y": "yyy"
+                            },
+                            "result": {
+                                "xxx": "yyy"
                             }
                         }
                     ]
@@ -2193,7 +2160,7 @@
             "examples": [
                 {
                     "name": "MapListsToDict",
-                    "doc": "TODO: Describe",
+                    "doc": "Zips two lists containing keys and values together into pairs.\nThen iterates over list of pairs and produces resulting dict.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -2283,7 +2250,7 @@
             "examples": [
                 {
                     "name": "JoinWithStaticNoOverrides",
-                    "doc": "TODO: Describe",
+                    "doc": "Enriches input dict with default value.",
                     "template": {
                         "$": "join",
                         "items": [
@@ -2306,7 +2273,7 @@
                 },
                 {
                     "name": "JoinWithStaticWithOverrides",
-                    "doc": "TODO: Describe",
+                    "doc": "Enriches input dict with default value.",
                     "template": {
                         "$": "join",
                         "items": [
@@ -2330,7 +2297,7 @@
                 },
                 {
                     "name": "JoinTwoDictsNoCommonKeys",
-                    "doc": "TODO: Describe",
+                    "doc": "Joins two dicts taken from separate attributes of input into one dict.",
                     "template": {
                         "$": "join",
                         "items": [
@@ -2363,7 +2330,7 @@
                 },
                 {
                     "name": "JoinTwoDictsWithCommonKeys",
-                    "doc": "TODO: Describe",
+                    "doc": "Joins two dicts taken from separate attributes of input into one dict.",
                     "template": {
                         "$": "join",
                         "items": [
@@ -2397,7 +2364,7 @@
                 },
                 {
                     "name": "JoinTwoStrings",
-                    "doc": "TODO: Describe",
+                    "doc": "Joins two dicts taken from separate attributes of input into one dict.",
                     "template": {
                         "$": "join",
                         "items": [
@@ -2419,7 +2386,7 @@
                 },
                 {
                     "name": "JoinManyDynamicDicts",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over input list twice.\nFirst time produces list of `dicts` with keys and values defined in separate attributes of input items.\nSecond time produces list of `dicts` but with keys and values swapped.\nJoins together results of two iteration into single list.\nThen joins together items of the list into single resulting object.",
                     "template": {
                         "$": "join",
                         "items": {
@@ -2475,30 +2442,43 @@
                 },
                 {
                     "name": "MapListToList",
-                    "doc": "TODO: Describe",
+                    "doc": "Maps two lists obtained from different attributes of input.\nThen joins two obtained lists into single resulting list.",
                     "template": {
-                        "$": "chain",
-                        "funcs": [
+                        "$": "join",
+                        "items": [
                             {
-                                "$": "join",
-                                "items": [
+                                "$": "chain",
+                                "funcs": [
                                     {
                                         "$": "attr",
                                         "name": "first"
                                     },
                                     {
-                                        "$": "attr",
-                                        "name": "second"
+                                        "$": "map",
+                                        "item": {
+                                            "first": {
+                                                "$": "item"
+                                            }
+                                        }
                                     }
                                 ]
                             },
                             {
-                                "$": "map",
-                                "item": {
-                                    "value": {
-                                        "$": "item"
+                                "$": "chain",
+                                "funcs": [
+                                    {
+                                        "$": "attr",
+                                        "name": "second"
+                                    },
+                                    {
+                                        "$": "map",
+                                        "item": {
+                                            "second": {
+                                                "$": "item"
+                                            }
+                                        }
                                     }
-                                }
+                                ]
                             }
                         ]
                     },
@@ -2516,22 +2496,22 @@
                     },
                     "result": [
                         {
-                            "value": 1
+                            "first": 1
                         },
                         {
-                            "value": 2
+                            "first": 2
                         },
                         {
-                            "value": 3
+                            "first": 3
                         },
                         {
-                            "value": 4
+                            "second": 4
                         },
                         {
-                            "value": 5
+                            "second": 5
                         },
                         {
-                            "value": 6
+                            "second": 6
                         }
                     ]
                 }
@@ -2721,7 +2701,7 @@
                 },
                 {
                     "name": "ExprSimpleMonads2",
-                    "doc": "TODO: Describe",
+                    "doc": "Adds prefix to input string.\nIllustrates functionality of `expr` rule in form of monad and usage of `parent` rule.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -2740,7 +2720,7 @@
                 },
                 {
                     "name": "ExprMonadsComplex",
-                    "doc": "TODO: Describe",
+                    "doc": "For input dictionary containing two integers returns sum of squares.\nIllustrates functionality of `expr` rule in form of monad.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -2793,30 +2773,43 @@
                 },
                 {
                     "name": "MapListToList",
-                    "doc": "TODO: Describe",
+                    "doc": "Maps two lists obtained from different attributes of input.\nThen joins two obtained lists into single resulting list.",
                     "template": {
-                        "$": "chain",
-                        "funcs": [
+                        "$": "join",
+                        "items": [
                             {
-                                "$": "join",
-                                "items": [
+                                "$": "chain",
+                                "funcs": [
                                     {
                                         "$": "attr",
                                         "name": "first"
                                     },
                                     {
-                                        "$": "attr",
-                                        "name": "second"
+                                        "$": "map",
+                                        "item": {
+                                            "first": {
+                                                "$": "item"
+                                            }
+                                        }
                                     }
                                 ]
                             },
                             {
-                                "$": "map",
-                                "item": {
-                                    "value": {
-                                        "$": "item"
+                                "$": "chain",
+                                "funcs": [
+                                    {
+                                        "$": "attr",
+                                        "name": "second"
+                                    },
+                                    {
+                                        "$": "map",
+                                        "item": {
+                                            "second": {
+                                                "$": "item"
+                                            }
+                                        }
                                     }
-                                }
+                                ]
                             }
                         ]
                     },
@@ -2834,28 +2827,28 @@
                     },
                     "result": [
                         {
-                            "value": 1
+                            "first": 1
                         },
                         {
-                            "value": 2
+                            "first": 2
                         },
                         {
-                            "value": 3
+                            "first": 3
                         },
                         {
-                            "value": 4
+                            "second": 4
                         },
                         {
-                            "value": 5
+                            "second": 5
                         },
                         {
-                            "value": 6
+                            "second": 6
                         }
                     ]
                 },
                 {
                     "name": "MapListsToDict",
-                    "doc": "TODO: Describe",
+                    "doc": "Zips two lists containing keys and values together into pairs.\nThen iterates over list of pairs and produces resulting dict.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -2905,7 +2898,7 @@
                 },
                 {
                     "name": "NoContentForAttr",
-                    "doc": "TODO: Describe",
+                    "doc": "Gets variable names `foo` that does not exist from context.\nThen tries to get attribute named `bar` of non-existing value.\nThis results into no value which translates into `None`.",
                     "template": {
                         "$": "chain",
                         "funcs": [
@@ -2936,7 +2929,7 @@
         {
             "rule": {
                 "name": "expr",
-                "doc": "Executes unary or binary operation.\nThere are 3 modes of running this rule:\n\n1. **No attributes specified:**\nResult is unary operation calculation against current context value.\n2. **Single `value` specified:**\nResult is binary operation calculation where the\nfirst argument is current values of context and\nthe second is specified value.\n3. **Multiple `values` specified:**\nResult is calculated by applying operation to all values in pairs (reduction).\nIn this case current context value is ignored."
+                "doc": "Executes unary or binary operation.\nThere are 3 modes of running this rule:\n\n1. **No attributes were specified:**\nResult is unary operation calculation against current context value.\n2. **Single `value` was specified:**\nResult is binary operation calculation where the\nfirst argument is current values of context and\nthe second is specified value.\n3. **Multiple `values` were specified:**\nResult is calculated by applying operation to all values in pairs (reduction).\nIn this case current context value is ignored.\n\nParameters are mutually exclusive."
             },
             "examples": [],
             "params": [
@@ -2948,7 +2941,7 @@
                     "examples": [
                         {
                             "name": "ExprUnary1",
-                            "doc": "TODO: Describe",
+                            "doc": "Calculates negation of input using `expr` rule with unary operator as monad.",
                             "template": {
                                 "$": "expr",
                                 "op": "!"
@@ -2958,7 +2951,7 @@
                         },
                         {
                             "name": "ExprUnary2",
-                            "doc": "TODO: Describe",
+                            "doc": "Calculates negation of input using `expr` rule with unary operator in alternative form.",
                             "template": {
                                 "$": "expr",
                                 "op": "not"
@@ -2975,8 +2968,23 @@
                     },
                     "examples": [
                         {
+                            "name": "ConvertValue",
+                            "doc": "Adds 100 to input integer and converts result into string.\nIllustrates usage of `call` attribute `value`.",
+                            "template": {
+                                "$": "call",
+                                "name": "str",
+                                "value": {
+                                    "$": "expr",
+                                    "op": "add",
+                                    "value": 100
+                                }
+                            },
+                            "data": 123,
+                            "result": "223"
+                        },
+                        {
                             "name": "ExprSimpleMonads1",
-                            "doc": "TODO: Describe",
+                            "doc": "Adds suffix to input string.\nIllustrates functionality of `expr` rule in form of monad.",
                             "template": {
                                 "$": "expr",
                                 "op": "+",
@@ -2987,7 +2995,7 @@
                         },
                         {
                             "name": "ExprSimpleMonads2",
-                            "doc": "TODO: Describe",
+                            "doc": "Adds prefix to input string.\nIllustrates functionality of `expr` rule in form of monad and usage of `parent` rule.",
                             "template": {
                                 "$": "chain",
                                 "funcs": [
@@ -3006,7 +3014,7 @@
                         },
                         {
                             "name": "ExprMonadsComplex",
-                            "doc": "TODO: Describe",
+                            "doc": "For input dictionary containing two integers returns sum of squares.\nIllustrates functionality of `expr` rule in form of monad.",
                             "template": {
                                 "$": "chain",
                                 "funcs": [
@@ -3067,7 +3075,7 @@
                     "examples": [
                         {
                             "name": "ExprSimpleValues1",
-                            "doc": "TODO: Describe",
+                            "doc": "Adds suffix to input string.\nIllustrates functionality of `expr` rule with direct parameters.",
                             "template": {
                                 "$": "expr",
                                 "op": "+",
@@ -3083,7 +3091,7 @@
                         },
                         {
                             "name": "ExprSimpleValues2",
-                            "doc": "TODO: Describe",
+                            "doc": "Adds prefix to input string.\nIllustrates functionality of `expr` rule with direct parameters.",
                             "template": {
                                 "$": "expr",
                                 "op": "+",
@@ -3099,7 +3107,7 @@
                         },
                         {
                             "name": "ExprValuesComplex",
-                            "doc": "TODO: Describe",
+                            "doc": "For input dictionary containing two integers returns sum of squares.\nIllustrates functionality of `expr` rule with direct parameters.",
                             "template": {
                                 "$": "expr",
                                 "op": "+",
@@ -3139,6 +3147,42 @@
                                 "b": 4
                             },
                             "result": 25
+                        },
+                        {
+                            "name": "FormatWithValue",
+                            "doc": "Iterates over list of values.\nFor formatting value creates dict with dynamically calculated values.\nProduces list of strings using formatting.",
+                            "template": {
+                                "$": "map",
+                                "item": {
+                                    "$": "format",
+                                    "pattern": "{x}-{y}",
+                                    "value": {
+                                        "x": {
+                                            "$": "this"
+                                        },
+                                        "y": {
+                                            "$": "expr",
+                                            "op": "+",
+                                            "values": [
+                                                {
+                                                    "$": "index"
+                                                },
+                                                1
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "data": [
+                                "a",
+                                "b",
+                                "c"
+                            ],
+                            "result": [
+                                "a-1",
+                                "b-2",
+                                "c-3"
+                            ]
                         }
                     ]
                 }
@@ -3146,15 +3190,15 @@
         },
         {
             "rule": {
-                "name": "convert",
-                "doc": "TODO: Describe"
+                "name": "call",
+                "doc": "Runs function registered in `Transformer`.\nUsually, that is used to convert values into different type, but you can also use it to call any function.\n\nThere are 3 modes of running this rule:\n\n1. **No attributes were specified:**\nRuns conversion function with single parameter - value of current context.\n2. **Single `value` was specified:**\nRuns conversion function with single parameter - provided value.\nCurrent context is ignored in this case.\n3. **Multiple `values` were specified:**\nRuns conversion function with multiple parameters.\nCurrent context is ignored in this case.\n\nParameters are mutually exclusive."
             },
             "examples": [
                 {
                     "name": "ConvertNoParameters",
-                    "doc": "TODO: Describe",
+                    "doc": "Converts input integer into string.",
                     "template": {
-                        "$": "convert",
+                        "$": "call",
                         "name": "str"
                     },
                     "data": 123,
@@ -3165,42 +3209,44 @@
                 {
                     "param": {
                         "name": "name",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines the name of function. This is always constant.\n\n###### Possible values:\n\n| name  | input | output |\n|-------|:-----:|:------:|\n| str   |  any  |  str   | \n| int   |  str  |  int   | \n| float |  str  | float  | "
                     },
                     "examples": []
                 },
                 {
                     "param": {
                         "name": "value",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for single parameter value"
                     },
                     "examples": [
                         {
                             "name": "ConvertValue",
-                            "doc": "TODO: Describe",
+                            "doc": "Adds 100 to input integer and converts result into string.\nIllustrates usage of `call` attribute `value`.",
                             "template": {
-                                "$": "convert",
+                                "$": "call",
                                 "name": "str",
                                 "value": {
-                                    "$": "this"
+                                    "$": "expr",
+                                    "op": "add",
+                                    "value": 100
                                 }
                             },
                             "data": 123,
-                            "result": "123"
+                            "result": "223"
                         }
                     ]
                 },
                 {
                     "param": {
                         "name": "values",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for multiple parameters values"
                     },
                     "examples": [
                         {
                             "name": "ConvertValues",
-                            "doc": "TODO: Describe",
+                            "doc": "Converts input string into integer in base-16.",
                             "template": {
-                                "$": "convert",
+                                "$": "call",
                                 "name": "int",
                                 "values": [
                                     {
@@ -3219,12 +3265,12 @@
         {
             "rule": {
                 "name": "format",
-                "doc": "TODO: Describe"
+                "doc": "Execute string formatting using current value.\n\nIf `value` is specified it is used for formatting otherwise current context value is used.\n\nSee [this page](https://docs.python.org/3/tutorial/inputoutput.html#the-string-format-method)\nfor examples of how formatting in python works.\n\nIf value for formatting is `dict` it will be unpacked to separate names.\nIf value is list if will be unpacked to separate items.\nOtherwise while value will be passed to formatting."
             },
             "examples": [
                 {
                     "name": "FormatFromSingleValue",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates list with floats and produces list of strings by formatting each item.",
                     "template": {
                         "$": "map",
                         "item": {
@@ -3255,7 +3301,7 @@
                 },
                 {
                     "name": "FormatFromDict",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over list of dicts and produces list of string using items for filling pattern slots.",
                     "template": {
                         "$": "map",
                         "item": {
@@ -3285,7 +3331,7 @@
                 },
                 {
                     "name": "FormatFromList",
-                    "doc": "TODO: Describe",
+                    "doc": "Iterates over list of lists and produces list of string using items for filling pattern slots.",
                     "template": {
                         "$": "map",
                         "item": {
@@ -3318,19 +3364,19 @@
                 {
                     "param": {
                         "name": "pattern",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines pattern for string formatting. This is always a constant."
                     },
                     "examples": []
                 },
                 {
                     "param": {
                         "name": "value",
-                        "doc": "TODO: Describe"
+                        "doc": "Defines template for input data. Optional."
                     },
                     "examples": [
                         {
                             "name": "FormatWithValue",
-                            "doc": "TODO: Describe",
+                            "doc": "Iterates over list of values.\nFor formatting value creates dict with dynamically calculated values.\nProduces list of strings using formatting.",
                             "template": {
                                 "$": "map",
                                 "item": {
