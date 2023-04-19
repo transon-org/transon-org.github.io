@@ -12,7 +12,9 @@ def dumps(value):
 def transform(template, data):
     try:
         transformer = transon.Transformer(loads(template))
-        return dumps(transformer.transform(loads(data)))
+        input_data = loads(data)
+        result = transformer.transform(input_data)
+        return dumps(None if result is transformer.NO_CONTENT else result)
     except Exception as error:
         return repr(error)
 
