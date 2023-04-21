@@ -28,6 +28,7 @@ export interface IRuleDoc {
 }
 
 export interface IDocsData {
+    version?: string;
     doc?: string;
     rules: IRuleDoc[];
 }

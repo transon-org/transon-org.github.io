@@ -18,7 +18,14 @@ function App(props: IDocsData) {
           <u>tran</u>sforms j<u>son</u>
         </figcaption>
       </figure>
-      <p>Homogenous JSON template engine</p>
+      <p>
+        <span>Homogenous JSON template engine </span>
+        {
+          props.version && (
+            <u>version <b>{props.version}</b></u>
+          )
+        }
+      </p>
       <Markdown>{props.doc}</Markdown>
       <h3>Rules</h3>
       <ExamplesContext.Provider value={{
