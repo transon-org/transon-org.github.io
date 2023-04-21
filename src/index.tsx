@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-// import {IDocsData} from './types'
-// import { mockedDocs } from './mocks';
 
 declare global {
   function transform(template: string, value: string): string;
@@ -21,5 +19,3 @@ globalThis.init = (data) => {
     </React.StrictMode>
   );
 }
-
-// init(mockedDocs);
