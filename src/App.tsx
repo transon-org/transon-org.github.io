@@ -19,7 +19,7 @@ function App(props: IDocsData) {
         </figcaption>
       </figure>
       <p>
-        <span>Homogenous JSON template engine </span>
+        <span>Homogeneous JSON template engine </span>
         {
           props.version && (
             <u>version <b>{props.version}</b></u>
