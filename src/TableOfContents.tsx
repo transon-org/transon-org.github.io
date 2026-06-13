@@ -8,6 +8,9 @@ export function TableOfContents(props: ITableOfContentsProps) {
         <nav className="toc mb-3" aria-label="Reference index">
             <h3>Reference</h3>
             <div className="toc-section">
+                <a href="#comparison" className="toc-heading">Comparison</a>
+            </div>
+            <div className="toc-section">
                 <a href="#rules" className="toc-heading">Rules</a>
                 {rules.map((rule) =>
                     <a
