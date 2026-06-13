@@ -7,10 +7,11 @@ interface IOperatorProps extends IOperatorDoc {
 
 export function Operator(props: IOperatorProps) {
     const { name, alternative, kind, types, result, doc } = props.operator;
+    const slug = `operator-${alternative}`;
     return (
-        <dl className="rule">
+        <dl className="rule" id={slug}>
             <dt className="border-3 border-start border-info bg-info-subtle py-1 px-2 text-light-emphasis">
-                <code>{name}</code>
+                <a href={`#${slug}`} className="heading-anchor"><code>{name}</code></a>
                 <span className="text-secondary"> / </span>
                 <code>{alternative}</code>
                 <span className="badge bg-secondary ms-2">{kind}</span>

@@ -6,6 +6,7 @@ import { Markdown } from './Markdown';
 import { Rule } from './Rule';
 import { Operator } from './Operator';
 import { Function } from './Function';
+import { TableOfContents } from './TableOfContents';
 
 function App(props: IDocsData) {
   const [activeExample, updateActiveExample] = useState<string | undefined>();
@@ -33,17 +34,22 @@ function App(props: IDocsData) {
         activeExample: activeExample,
         updateActiveExample: updateActiveExample
       }}>
-        <h3>Rules</h3>
-        <div id="rules">
+        <TableOfContents
+          rules={props.rules}
+          operators={props.operators}
+          functions={props.functions}
+        />
+        <h3 id="rules">Rules</h3>
+        <div>
           {props.rules.map((rule) =>
             <Rule {...rule} key={rule.rule.name} />
           )}
         </div>
         {props.operators && props.operators.length > 0 && (
           <>
-            <h3>Operators</h3>
+            <h3 id="operators">Operators</h3>
             <p>Used by the <code>expr</code> rule via its <code>op</code> parameter.</p>
-            <div id="operators">
+            <div>
               {props.operators.map((operator) =>
                 <Operator {...operator} key={operator.operator.alternative} />
               )}
@@ -52,9 +58,9 @@ function App(props: IDocsData) {
         )}
         {props.functions && props.functions.length > 0 && (
           <>
-            <h3>Functions</h3>
+            <h3 id="functions">Functions</h3>
             <p>Used by the <code>call</code> rule via its <code>name</code> parameter.</p>
-            <div id="functions">
+            <div>
               {props.functions.map((func) =>
                 <Function {...func} key={func.function.name} />
               )}
