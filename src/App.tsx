@@ -4,6 +4,8 @@ import { IDocsData } from './types';
 import { ExamplesContext } from './ExamplesContext';
 import { Markdown } from './Markdown';
 import { Rule } from './Rule';
+import { Operator } from './Operator';
+import { Function } from './Function';
 
 function App(props: IDocsData) {
   const [activeExample, updateActiveExample] = useState<string | undefined>();
@@ -27,16 +29,38 @@ function App(props: IDocsData) {
         }
       </p>
       <Markdown>{props.doc}</Markdown>
-      <h3>Rules</h3>
       <ExamplesContext.Provider value={{
         activeExample: activeExample,
         updateActiveExample: updateActiveExample
       }}>
+        <h3>Rules</h3>
         <div id="rules">
           {props.rules.map((rule) =>
             <Rule {...rule} key={rule.rule.name} />
           )}
         </div>
+        {props.operators && props.operators.length > 0 && (
+          <>
+            <h3>Operators</h3>
+            <p>Used by the <code>expr</code> rule via its <code>op</code> parameter.</p>
+            <div id="operators">
+              {props.operators.map((operator) =>
+                <Operator {...operator} key={operator.operator.alternative} />
+              )}
+            </div>
+          </>
+        )}
+        {props.functions && props.functions.length > 0 && (
+          <>
+            <h3>Functions</h3>
+            <p>Used by the <code>call</code> rule via its <code>name</code> parameter.</p>
+            <div id="functions">
+              {props.functions.map((func) =>
+                <Function {...func} key={func.function.name} />
+              )}
+            </div>
+          </>
+        )}
       </ExamplesContext.Provider>
     </div>
   );

@@ -27,8 +27,36 @@ export interface IRuleDoc {
     params: IParamDoc[];
 }
 
+export interface IOperatorDefinition {
+    name: string;
+    alternative: string;
+    kind: string;
+    types: string;
+    result: string;
+    doc?: string;
+}
+
+export interface IOperatorDoc {
+    operator: IOperatorDefinition;
+    examples: IExampleData[];
+}
+
+export interface IFunctionDefinition {
+    name: string;
+    input: string;
+    output: string;
+    doc?: string;
+}
+
+export interface IFunctionDoc {
+    function: IFunctionDefinition;
+    examples: IExampleData[];
+}
+
 export interface IDocsData {
     version?: string;
     doc?: string;
     rules: IRuleDoc[];
+    operators?: IOperatorDoc[];
+    functions?: IFunctionDoc[];
 }
