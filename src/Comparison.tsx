@@ -18,7 +18,7 @@ const COMPARISON_MD = [
     "**Where `transon` is _not_ the best pick** (worth being honest about):",
     "",
     "- **Expression-heavy** transforms read far more concisely in a string DSL like JSONata or jq — `transon` spells `(a + b) * c` as a nested rule tree.",
-    "- **Maturity & ecosystem**: jq and JSONata are battle-tested with large communities; `transon` is young (`0.0.x`) and Python-only.",
+    "- **Maturity & ecosystem**: jq and JSONata are battle-tested with large communities; `transon` is young and Python-only.",
     "",
     "### The trade-off, concretely",
     "",
