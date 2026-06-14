@@ -57,6 +57,7 @@ export interface IDocsData {
     version?: string;
     doc?: string;
     worked_examples?: IExampleData[];
+    recipes?: IExampleData[];
     rules: IRuleDoc[];
     operators?: IOperatorDoc[];
     functions?: IFunctionDoc[];
