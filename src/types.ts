@@ -56,6 +56,7 @@ export interface IFunctionDoc {
 export interface IDocsData {
     version?: string;
     doc?: string;
+    worked_examples?: IExampleData[];
     rules: IRuleDoc[];
     operators?: IOperatorDoc[];
     functions?: IFunctionDoc[];

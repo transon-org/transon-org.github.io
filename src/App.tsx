@@ -8,6 +8,7 @@ import { Operator } from './Operator';
 import { Function } from './Function';
 import { TableOfContents } from './TableOfContents';
 import { Comparison } from './Comparison';
+import { WorkedExamples } from './WorkedExamples';
 
 function App(props: IDocsData) {
   const [activeExample, updateActiveExample] = useState<string | undefined>();
@@ -39,8 +40,10 @@ function App(props: IDocsData) {
           rules={props.rules}
           operators={props.operators}
           functions={props.functions}
+          workedExamples={props.worked_examples}
         />
         <Comparison />
+        <WorkedExamples examples={props.worked_examples} />
         <h3 id="rules">Rules</h3>
         <div>
           {props.rules.map((rule) =>

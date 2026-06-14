@@ -1,15 +1,22 @@
 import { IDocsData } from './types';
 
-type ITableOfContentsProps = Pick<IDocsData, 'rules' | 'operators' | 'functions'>;
+type ITableOfContentsProps = Pick<IDocsData, 'rules' | 'operators' | 'functions'> & {
+    workedExamples?: IDocsData['worked_examples'];
+};
 
 export function TableOfContents(props: ITableOfContentsProps) {
-    const { rules, operators, functions } = props;
+    const { rules, operators, functions, workedExamples } = props;
     return (
         <nav className="toc mb-3" aria-label="Reference index">
             <h3>Reference</h3>
             <div className="toc-section">
                 <a href="#comparison" className="toc-heading">Comparison</a>
             </div>
+            {workedExamples && workedExamples.length > 0 && (
+                <div className="toc-section">
+                    <a href="#worked-examples" className="toc-heading">Worked examples</a>
+                </div>
+            )}
             <div className="toc-section">
                 <a href="#rules" className="toc-heading">Rules</a>
                 {rules.map((rule) =>
