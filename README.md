@@ -14,15 +14,15 @@ Do not edit `gh-pages` by hand. Pushes to `master` deploy automatically via GitH
 ## Development
 
 ```bash
-npm install
-npm start
+yarn install
+yarn start
 ```
 
 Open http://localhost:3000. The playground needs PyScript to load `transon` from PyPI in the browser; local dev behaves the same as production.
 
 ## Release
 
-Pushes to `master` trigger an automatic deploy: the workflow builds the app and
+Pushes to `master` trigger an automatic deploy: the workflow runs `yarn build` and
 pushes `build/` to the `gh-pages` branch (same result as the manual command below).
 
 To deploy manually:
