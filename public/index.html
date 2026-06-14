@@ -43,7 +43,40 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <!--
+      Static intro shown immediately, before the Python runtime (Pyodide) finishes
+      downloading. PyScript's splash spinner is disabled in config.toml, so this is
+      what visitors see for the first ~10-15s. React's init() (src/index.tsx) clears
+      #root and renders the full generated docs once they arrive. See D-14.
+    -->
+    <div id="root">
+      <div class="container">
+        <figure>
+          <blockquote class="blockquote">
+            <h1>Transon</h1>
+          </blockquote>
+          <figcaption class="blockquote-footer">
+            <u>tran</u>sforms j<u>son</u>
+          </figcaption>
+        </figure>
+        <p>Homogeneous JSON-to-JSON template engine</p>
+        <p>
+          Write templates in pure JSON and transform data with composable, nestable
+          rules — no string-embedded DSL. Inspired by XSLT and JsonLogic.
+        </p>
+        <pre><code>pip install transon</code></pre>
+        <p>
+          <a href="https://pypi.org/project/transon/">PyPI</a> ·
+          <a href="https://github.com/transon-org/transon">GitHub</a> ·
+          <a href="https://github.com/transon-org/transon/blob/main/docs/SPECIFICATION.md">Specification</a> ·
+          <a href="https://github.com/transon-org/transon/blob/main/CHANGELOG.md">Changelog</a>
+        </p>
+        <p class="text-muted">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Loading the interactive reference &amp; playground…
+        </p>
+      </div>
+    </div>
     <a href="https://github.com/transon-org/transon" style="position: absolute; top:0; right: 0;">
       <img decoding="async" loading="lazy" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_gray_6d6d6d.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1">
     </a>

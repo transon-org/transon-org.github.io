@@ -1,1 +1,7 @@
 packages = ["transon"]
+
+# Hide PyScript's default loading spinner so the static intro placed in #root
+# (see index.html) is visible during the ~10-15s Pyodide download. The intro is
+# replaced by the generated docs once script.py calls init(). See D-14.
+[splashscreen]
+enabled = false

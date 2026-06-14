@@ -10,9 +10,11 @@ declare global {
 
 globalThis.init = (data) => {
   const docs = JSON.parse(data);
-  const root = ReactDOM.createRoot(
-    document.getElementById('root') as HTMLElement
-  );
+  const container = document.getElementById('root') as HTMLElement;
+  // Drop the static pre-load intro (see public/index.html) before mounting so
+  // React starts from an empty container and doesn't duplicate the header.
+  container.innerHTML = '';
+  const root = ReactDOM.createRoot(container);
   root.render(
     <React.StrictMode>
       <App {...docs}/>
