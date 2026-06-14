@@ -9,7 +9,7 @@ Interactive docs and playground for [transon](https://github.com/transon-org/tra
 | `master` | Source — React app, `public/` assets, TypeScript |
 | `gh-pages` | Release — built static site served by GitHub Pages |
 
-Do not edit `gh-pages` by hand. Deploy from `master` with `npm run deploy`.
+Do not edit `gh-pages` by hand. Pushes to `master` deploy automatically via GitHub Actions (`.github/workflows/deploy.yml`). You can still deploy manually with `npm run deploy`.
 
 ## Development
 
@@ -21,6 +21,11 @@ npm start
 Open http://localhost:3000. The playground needs PyScript to load `transon` from PyPI in the browser; local dev behaves the same as production.
 
 ## Release
+
+Pushes to `master` trigger an automatic deploy: the workflow builds the app and
+pushes `build/` to the `gh-pages` branch (same result as the manual command below).
+
+To deploy manually:
 
 ```bash
 npm run deploy
