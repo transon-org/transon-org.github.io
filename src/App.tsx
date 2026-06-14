@@ -10,6 +10,7 @@ import { TableOfContents } from './TableOfContents';
 import { Comparison } from './Comparison';
 import { WorkedExamples } from './WorkedExamples';
 import { Recipes } from './Recipes';
+import { ErrorModel } from './ErrorModel';
 
 function App(props: IDocsData) {
   const [activeExample, updateActiveExample] = useState<string | undefined>();
@@ -43,10 +44,12 @@ function App(props: IDocsData) {
           functions={props.functions}
           workedExamples={props.worked_examples}
           recipes={props.recipes}
+          errors={props.errors}
         />
         <Comparison />
         <WorkedExamples examples={props.worked_examples} />
         <Recipes recipes={props.recipes} />
+        <ErrorModel errors={props.errors} />
         <h3 id="rules">Rules</h3>
         <div>
           {props.rules.map((rule) =>

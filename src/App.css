@@ -75,3 +75,17 @@ dl.rule dd {
   padding-left: 10px;
   padding-right: 10px;
 }
+
+#error-model {
+  scroll-margin-top: 12px;
+}
+
+dl.error-model .error-case {
+  margin-bottom: 24px;
+  padding-left: 16px;
+  border-left: 3px solid var(--bs-border-color, #dee2e6);
+}
+
+dl.error-model .error-case:last-child {
+  margin-bottom: 0;
+}
