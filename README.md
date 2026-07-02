@@ -7,9 +7,9 @@ Interactive docs and playground for [transon](https://github.com/transon-org/tra
 | Branch | Purpose |
 |--------|---------|
 | `master` | Source — React app, `public/` assets, TypeScript |
-| `gh-pages` | Release — built static site served by GitHub Pages |
 
-Do not edit `gh-pages` by hand. Pushes to `master` deploy automatically via GitHub Actions (`.github/workflows/deploy.yml`). You can still deploy manually with `npm run deploy`.
+Pushes to `master` deploy automatically via GitHub Actions (`.github/workflows/deploy.yml`).
+GitHub Pages must be configured to **GitHub Actions** (Settings → Pages → Build and deployment → Source).
 
 ## Development
 
@@ -22,16 +22,9 @@ Open http://localhost:3000. The playground needs PyScript to load `transon` from
 
 ## Release
 
-Pushes to `master` trigger an automatic deploy: the workflow runs `yarn build` and
-pushes `build/` to the `gh-pages` branch (same result as the manual command below).
-
-To deploy manually:
-
-```bash
-npm run deploy
-```
-
-This runs `npm run build` (via `predeploy`), then pushes the `build/` folder to the `gh-pages` branch with [gh-pages](https://www.npmjs.com/package/gh-pages).
+Pushes to `master` trigger an automatic deploy: the workflow runs `yarn build`, uploads
+the artifact, and publishes with `actions/deploy-pages`. You can also re-run the
+workflow manually from the Actions tab.
 
 After deploy, verify https://transon-org.github.io/ loads the docs (not a blank page). PyScript assets are pinned in `public/index.html` — the `/latest/` CDN path no longer exists.
 
