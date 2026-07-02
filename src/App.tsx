@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import './App.css';
 import { IDocsData } from './types';
+import { resolveDocs } from './resolve';
 import { ExamplesContext } from './ExamplesContext';
 import { Markdown } from './Markdown';
 import { Rule } from './Rule';
@@ -14,6 +15,9 @@ import { ErrorModel } from './ErrorModel';
 
 function App(props: IDocsData) {
   const [activeExample, updateActiveExample] = useState<string | undefined>();
+  // Engine docs arrive normalized (flat example corpus + name references,
+  // Roadmap R-31); resolve once into the inlined shape the components render.
+  const docs = useMemo(() => resolveDocs(props), [props]);
 
   return (
     <div className="container">
@@ -39,40 +43,40 @@ function App(props: IDocsData) {
         updateActiveExample: updateActiveExample
       }}>
         <TableOfContents
-          rules={props.rules}
-          operators={props.operators}
-          functions={props.functions}
-          workedExamples={props.worked_examples}
-          recipes={props.recipes}
-          errors={props.errors}
+          rules={docs.rules}
+          operators={docs.operators}
+          functions={docs.functions}
+          workedExamples={docs.worked_examples}
+          recipes={docs.recipes}
+          errors={docs.errors}
         />
         <Comparison />
-        <WorkedExamples examples={props.worked_examples} />
-        <Recipes recipes={props.recipes} />
-        <ErrorModel errors={props.errors} />
+        <WorkedExamples examples={docs.worked_examples} />
+        <Recipes recipes={docs.recipes} />
+        <ErrorModel errors={docs.errors} />
         <h3 id="rules">Rules</h3>
         <div>
-          {props.rules.map((rule) =>
+          {docs.rules.map((rule) =>
             <Rule {...rule} key={rule.rule.name} />
           )}
         </div>
-        {props.operators && props.operators.length > 0 && (
+        {docs.operators.length > 0 && (
           <>
             <h3 id="operators">Operators</h3>
             <p>Used by the <code>expr</code> rule via its <code>op</code> parameter.</p>
             <div>
-              {props.operators.map((operator) =>
+              {docs.operators.map((operator) =>
                 <Operator {...operator} key={operator.operator.alternative} />
               )}
             </div>
           </>
         )}
-        {props.functions && props.functions.length > 0 && (
+        {docs.functions.length > 0 && (
           <>
             <h3 id="functions">Functions</h3>
             <p>Used by the <code>call</code> rule via its <code>name</code> parameter.</p>
             <div>
-              {props.functions.map((func) =>
+              {docs.functions.map((func) =>
                 <Function {...func} key={func.function.name} />
               )}
             </div>

@@ -1,9 +1,9 @@
-import { IDocsData } from './types';
+import { IResolvedDocs } from './types';
 
-type ITableOfContentsProps = Pick<IDocsData, 'rules' | 'operators' | 'functions'> & {
-    workedExamples?: IDocsData['worked_examples'];
-    recipes?: IDocsData['recipes'];
-    errors?: IDocsData['errors'];
+type ITableOfContentsProps = Pick<IResolvedDocs, 'rules' | 'operators' | 'functions'> & {
+    workedExamples?: IResolvedDocs['worked_examples'];
+    recipes?: IResolvedDocs['recipes'];
+    errors?: IResolvedDocs['errors'];
 };
 
 export function TableOfContents(props: ITableOfContentsProps) {
