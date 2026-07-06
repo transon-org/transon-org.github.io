@@ -57,7 +57,7 @@ export function ExampleEditor(props: IExampleData) {
                                     className="btn btn-sm btn-primary mt-1"
                                     onClick={() => openInEditor(props)}
                                 >
-                                    Open this sample in the editor
+                                    Open in Visual Editor
                                 </button>
                             )}
                         </div>
