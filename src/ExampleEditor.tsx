@@ -1,5 +1,5 @@
 import Editor from "@monaco-editor/react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDebounce } from "./debounce";
 import { Markdown } from "./Markdown";
 import { ExamplesContext } from "./ExamplesContext";
@@ -19,15 +19,19 @@ export function ExampleEditor(props: IExampleData) {
     const debouncedRef = useDebounce(ref.current, 500);
 
     useEffect(() => {
+        // Bring the just-opened example into view with the SMALLEST scroll needed ("nearest"):
+        // if it's already visible (it renders right below the clicked button), don't scroll at all.
         ref.current?.scrollIntoView({
-            block: "end",
+            block: "nearest",
             behavior: "smooth",
         })
     }, [debouncedRef]);
 
     const clientWidth = document.documentElement.clientWidth;
 
-    useEffect(() => {
+    // Measure the container offset BEFORE paint (useLayoutEffect) so the full-bleed panel renders in
+    // its final position on the first painted frame — no empty-placeholder → content flash / jump.
+    useLayoutEffect(() => {
         updateLeft(ref.current?.offsetLeft);
     }, [ref.current?.offsetLeft, clientWidth])
 
@@ -49,17 +53,19 @@ export function ExampleEditor(props: IExampleData) {
                 }}>
                     <div className="row p-2 m-0">
                         <div className="col col-12">
-                            <h2>{props.name}</h2>
+                            <div className="d-flex align-items-center justify-content-between gap-3">
+                                <h2 className="mb-0">{props.name}</h2>
+                                {openInEditor && (
+                                    <button
+                                        type="button"
+                                        className="btn btn-sm btn-primary flex-shrink-0"
+                                        onClick={() => openInEditor(props)}
+                                    >
+                                        Open in Visual Editor
+                                    </button>
+                                )}
+                            </div>
                             <Markdown>{props.doc}</Markdown>
-                            {openInEditor && (
-                                <button
-                                    type="button"
-                                    className="btn btn-sm btn-primary mt-1"
-                                    onClick={() => openInEditor(props)}
-                                >
-                                    Open in Visual Editor
-                                </button>
-                            )}
                         </div>
                     </div>
                     <div className="row p-2 m-0">
