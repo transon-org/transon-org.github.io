@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { TransonEditor } from '@transon/editor-react';
-import type { EngineProvider } from '@transon/editor-core';
+import type { EngineProvider } from '@transon/editor-react';
 import { IExampleData } from './types';
 import { toExampleCases } from './transonEngine';
 

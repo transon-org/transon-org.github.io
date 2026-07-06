@@ -7,10 +7,10 @@
 import type {
   EngineProvider,
   ExecutionResult,
+  ExampleCase,
   Json,
   ValidationResult,
-} from '@transon/editor-core';
-import type { ExampleCase } from '@transon/editor-ui';
+} from '@transon/editor-react';
 import { IExampleData } from './types';
 
 type PyCallable = (...args: unknown[]) => unknown;
