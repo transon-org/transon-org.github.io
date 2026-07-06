@@ -26,7 +26,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          # >=22 required by blockly@13 (a transitive dep of @transon/editor-react); yarn's
+          # engine check hard-fails the install on Node 20.
+          node-version: "22"
           cache: yarn
 
       - run: yarn install --frozen-lockfile
