@@ -1,6 +1,5 @@
 import Editor from "@monaco-editor/react";
 import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useDebounce } from "./debounce";
 import { Markdown } from "./Markdown";
 import { ExamplesContext } from "./ExamplesContext";
 import { IExampleData } from "./types";
@@ -16,16 +15,9 @@ export function ExampleEditor(props: IExampleData) {
     const [template, updateTemplate] = useState<string | undefined>(JSON.stringify(props.template, null, 2));
     const [outputResult, updateOutputResult] = useState<string | undefined>(JSON.stringify(props.result, null, 2));
 
-    const debouncedRef = useDebounce(ref.current, 500);
-
-    useEffect(() => {
-        // Bring the just-opened example into view with the SMALLEST scroll needed ("nearest"):
-        // if it's already visible (it renders right below the clicked button), don't scroll at all.
-        ref.current?.scrollIntoView({
-            block: "nearest",
-            behavior: "smooth",
-        })
-    }, [debouncedRef]);
+    // No auto-scroll: the example renders right below the clicked button, so it's already in view.
+    // The previous debounced scrollIntoView fired ~500ms after opening (and re-targeted a
+    // still-settling, taller-than-viewport panel), which read as a delayed "jump".
 
     const clientWidth = document.documentElement.clientWidth;
 
