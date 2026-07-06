@@ -15,16 +15,47 @@ export function ExampleEditor(props: IExampleData) {
     const [template, updateTemplate] = useState<string | undefined>(JSON.stringify(props.template, null, 2));
     const [outputResult, updateOutputResult] = useState<string | undefined>(JSON.stringify(props.result, null, 2));
 
-    // Bring the just-opened example into view ONCE, immediately on open (no debounce), and only when
-    // it opened largely below the fold — e.g. the button was near the bottom, so the whole example
-    // would otherwise be off-screen. We align its TOP (`block: "start"`): the top is a stable target
-    // (the three panels reserve fixed height), so there's no delayed re-scroll / jump like the old
-    // debounced `block: "end"` had. An already-visible example doesn't move.
+    // Keep the newly-opened example pinned to the BOTTOM of the viewport — the original, correct end
+    // state: the whole example is in view AND the clicked example button stays visible just above it.
+    // Two things this has to survive, which the old 500ms-debounced smooth scroll handled clumsily
+    // (it opened, paused, then "jumped" a second later):
+    //  - a "smooth"/"auto" scroll inherits the page's `scroll-behavior: smooth` and animates over
+    //    ~1s, and gets interrupted mid-animation — so it lands short;
+    //  - async content ABOVE the example (docs diagram images) finishes loading in the first few
+    //    hundred ms and pushes the example down after a single scroll.
+    // So: re-align INSTANTLY every frame for a short settle window, and bail the moment the user
+    // scrolls, so we never fight them. Instant re-aligns are imperceptible; the example simply stays
+    // put as the page settles. ("instant" is a valid runtime ScrollBehavior; TS 4.9's lib predates it.)
     useEffect(() => {
         const el = ref.current;
-        if (el && el.getBoundingClientRect().top > window.innerHeight * 0.5) {
-            el.scrollIntoView({ block: "start", behavior: "smooth" });
-        }
+        if (!el) return;
+        // Pin the example to the BOTTOM of the viewport (the original, correct end state: whole
+        // example in view, clicked button still visible above it). This has to survive the layout
+        // settling in the first few hundred ms (the header/Monaco panels reserving their height, and
+        // async diagram images ABOVE the example loading and pushing it down). So re-align INSTANTLY
+        // each frame for a short window — instant re-aligns are imperceptible, so the example just
+        // "stays put" instead of the old smooth scroll that opened, paused, then jumped a second
+        // later. Bail the instant the user scrolls, so we never fight them.
+        // ("instant" is a valid runtime ScrollBehavior; TS 4.9's DOM lib predates it — hence the cast.)
+        let raf = 0;
+        let userScrolled = false;
+        const onUserScroll = () => { userScrolled = true; };
+        window.addEventListener("wheel", onUserScroll, { passive: true });
+        window.addEventListener("touchstart", onUserScroll, { passive: true });
+        window.addEventListener("keydown", onUserScroll);
+        const start = performance.now();
+        const align = () => {
+            if (userScrolled) return;
+            el.scrollIntoView({ block: "end", behavior: "instant" as ScrollBehavior });
+            if (performance.now() - start < 700) raf = requestAnimationFrame(align);
+        };
+        align();
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener("wheel", onUserScroll);
+            window.removeEventListener("touchstart", onUserScroll);
+            window.removeEventListener("keydown", onUserScroll);
+        };
         // Run once, on open.
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
