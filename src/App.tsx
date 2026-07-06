@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
 import './App.css';
-import { IDocsData } from './types';
+import { IDocsData, IExampleData } from './types';
 import { resolveDocs } from './resolve';
 import { ExamplesContext } from './ExamplesContext';
+import { EditorView } from './EditorView';
+import { createSharedPyScriptEngine } from './transonEngine';
 import { Markdown } from './Markdown';
 import { Rule } from './Rule';
 import { Operator } from './Operator';
@@ -15,9 +17,24 @@ import { ErrorModel } from './ErrorModel';
 
 function App(props: IDocsData) {
   const [activeExample, updateActiveExample] = useState<string | undefined>();
+  // The example currently opened in the embedded visual editor (RFC-005), or null for the docs view.
+  const [editorExample, setEditorExample] = useState<IExampleData | null>(null);
+  // One EngineProvider over the shared PyScript runtime, created once (never re-inits Pyodide).
+  const engine = useMemo(() => createSharedPyScriptEngine(), []);
   // Engine docs arrive normalized (flat example corpus + name references,
   // Roadmap R-31); resolve once into the inlined shape the components render.
   const docs = useMemo(() => resolveDocs(props), [props]);
+
+  if (editorExample) {
+    return (
+      <EditorView
+        engine={engine}
+        example={editorExample}
+        examples={props.examples}
+        onBack={() => setEditorExample(null)}
+      />
+    );
+  }
 
   return (
     <div className="container">
@@ -40,7 +57,8 @@ function App(props: IDocsData) {
       <Markdown>{props.doc}</Markdown>
       <ExamplesContext.Provider value={{
         activeExample: activeExample,
-        updateActiveExample: updateActiveExample
+        updateActiveExample: updateActiveExample,
+        openInEditor: setEditorExample
       }}>
         <TableOfContents
           rules={docs.rules}

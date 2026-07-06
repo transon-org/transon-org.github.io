@@ -1,10 +1,12 @@
 import Editor from "@monaco-editor/react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useDebounce } from "./debounce";
 import { Markdown } from "./Markdown";
+import { ExamplesContext } from "./ExamplesContext";
 import { IExampleData } from "./types";
 
 export function ExampleEditor(props: IExampleData) {
+    const { openInEditor } = useContext(ExamplesContext);
     const ref = useRef<HTMLDivElement>(null);
     const monacoInputRef = useRef(null);
     const monacoTemplateRef = useRef(null);
@@ -49,6 +51,15 @@ export function ExampleEditor(props: IExampleData) {
                         <div className="col col-12">
                             <h2>{props.name}</h2>
                             <Markdown>{props.doc}</Markdown>
+                            {openInEditor && (
+                                <button
+                                    type="button"
+                                    className="btn btn-sm btn-primary mt-1"
+                                    onClick={() => openInEditor(props)}
+                                >
+                                    Open in Visual Editor
+                                </button>
+                            )}
                         </div>
                     </div>
                     <div className="row p-2 m-0">
