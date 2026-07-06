@@ -1,7 +1,4 @@
-packages = ["transon"]
-
-# Hide PyScript's default loading spinner so the static intro placed in #root
-# (see index.html) is visible during the ~10-15s Pyodide download. The intro is
-# replaced by the generated docs once script.py calls init(). See D-14.
-[splashscreen]
-enabled = false
+# PyScript config. `transon>=0.1.7` is required by the visual editor's forward-projection codec
+# (engine recursion-budget fix R-32); the docs rendering uses the same install. micropip honors the
+# version specifier when fetching from PyPI (RFC-005 B1).
+packages = ["transon>=0.1.7"]

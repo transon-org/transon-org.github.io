@@ -1089,6 +1089,16 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@blockly/workspace-minimap@13.1.0":
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/@blockly/workspace-minimap/-/workspace-minimap-13.1.0.tgz#d29692f2f62341c70803df9fd738527507845a2d"
+  integrity sha512-BK2iTGl79ysXoEFuxo5+95wUfAcuXIY5AfeYEFbzDRIRrMgDmjFRFwNQRNpaz1bybTgGCkBRTTp3X8HryaaniQ==
+
+"@blockly/zoom-to-fit@13.1.0":
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/@blockly/zoom-to-fit/-/zoom-to-fit-13.1.0.tgz#09e124aa44afa61bafe7472d4e26d7f339406783"
+  integrity sha512-ch5C4Z+53kLujocgbyTAb4FZQptaQPJV2nSHlmpoP0O2C7ABRB14IR9/25FEMx4SZBkKv9N4cN/AFTipZvwPKw==
+
 "@craco/craco@^7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@craco/craco/-/craco-7.1.0.tgz#12bd394c7f0334e214302e4d35a1768f68042fbb"
@@ -1875,6 +1885,13 @@
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
+
+"@transon/editor-react@file:../transon-blockly/packages/editor-react":
+  version "0.0.0"
+  dependencies:
+    "@blockly/workspace-minimap" "13.1.0"
+    "@blockly/zoom-to-fit" "13.1.0"
+    blockly "13.0.0"
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
@@ -3023,6 +3040,11 @@ binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
+
+blockly@13.0.0:
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/blockly/-/blockly-13.0.0.tgz#2262bd50afa42070d7a83a7923a35c63b99b72d2"
+  integrity sha512-A5sj35fOgVAaEGqgrZftcKv0LxFKOnAQ7BA9uAlXrEQAiJuaKer59QJzmjwhYXiJzrR4fZfF6CQ6gpRr7PIcaQ==
 
 bluebird@^3.5.5:
   version "3.7.2"
