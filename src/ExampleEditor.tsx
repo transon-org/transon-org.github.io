@@ -15,9 +15,19 @@ export function ExampleEditor(props: IExampleData) {
     const [template, updateTemplate] = useState<string | undefined>(JSON.stringify(props.template, null, 2));
     const [outputResult, updateOutputResult] = useState<string | undefined>(JSON.stringify(props.result, null, 2));
 
-    // No auto-scroll: the example renders right below the clicked button, so it's already in view.
-    // The previous debounced scrollIntoView fired ~500ms after opening (and re-targeted a
-    // still-settling, taller-than-viewport panel), which read as a delayed "jump".
+    // Bring the just-opened example into view ONCE, immediately on open (no debounce), and only when
+    // it opened largely below the fold — e.g. the button was near the bottom, so the whole example
+    // would otherwise be off-screen. We align its TOP (`block: "start"`): the top is a stable target
+    // (the three panels reserve fixed height), so there's no delayed re-scroll / jump like the old
+    // debounced `block: "end"` had. An already-visible example doesn't move.
+    useEffect(() => {
+        const el = ref.current;
+        if (el && el.getBoundingClientRect().top > window.innerHeight * 0.5) {
+            el.scrollIntoView({ block: "start", behavior: "smooth" });
+        }
+        // Run once, on open.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const clientWidth = document.documentElement.clientWidth;
 
