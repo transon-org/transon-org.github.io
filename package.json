@@ -9,7 +9,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@transon/editor-react": "https://github.com/transon-org/transon-blockly/releases/download/v0.1.0/transon-editor-react-0.1.0.tgz",
+    "@transon/editor-react": "https://github.com/transon-org/transon-blockly/releases/download/v0.1.1/transon-editor-react-0.1.1.tgz",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.21",
     "@types/react": "^18.0.29",
