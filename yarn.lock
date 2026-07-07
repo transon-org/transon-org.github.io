@@ -1886,16 +1886,9 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@transon/editor-react@file:../transon-blockly/packages/editor-react":
-  version "0.1.0"
-  dependencies:
-    "@blockly/workspace-minimap" "13.1.0"
-    "@blockly/zoom-to-fit" "13.1.0"
-    blockly "13.0.0"
-
-"@transon/editor-react@https://github.com/transon-org/transon-blockly/releases/download/v0.1.0/transon-editor-react-0.1.0.tgz":
-  version "0.1.0"
-  resolved "https://github.com/transon-org/transon-blockly/releases/download/v0.1.0/transon-editor-react-0.1.0.tgz#9d0d7078633cdf3897b7e50917e44a136d1882a8"
+"@transon/editor-react@https://github.com/transon-org/transon-blockly/releases/download/v0.1.1/transon-editor-react-0.1.1.tgz":
+  version "0.1.1"
+  resolved "https://github.com/transon-org/transon-blockly/releases/download/v0.1.1/transon-editor-react-0.1.1.tgz#32613b8e5659ec4cbf73c224fc9eb09dbca53907"
   dependencies:
     "@blockly/workspace-minimap" "13.1.0"
     "@blockly/zoom-to-fit" "13.1.0"
