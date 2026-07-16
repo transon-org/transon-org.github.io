@@ -114,6 +114,18 @@ def transon_transform(template_json, input_json, marker, includes_json, js_loade
     )
 
 
+def transon_editor_metadata():
+    # RFC-007/FR-139 (transon-blockly metadata-contract §3 runtime delivery): the full
+    # get_editor_metadata() payload, verbatim, as a JSON string. Errors return an envelope the
+    # provider surfaces as a rejection -> the editor's FR-140 gate falls back to its snapshot.
+    try:
+        if get_editor_metadata is None:
+            raise RuntimeError("engine has no editor-metadata export (transon.metadata)")
+        return json.dumps({"status": "ok", "metadata": get_editor_metadata()})
+    except Exception as exc:  # discriminated by _error_fields; never escapes
+        return json.dumps({"status": "error", **_error_fields(exc)})
+
+
 def transon_version():
     try:
         version = getattr(transon, "__version__", None)
@@ -134,5 +146,6 @@ js.transform = create_proxy(transform)
 js.transon_validate = create_proxy(transon_validate)
 js.transon_transform = create_proxy(transon_transform)
 js.transon_version = create_proxy(transon_version)
+js.transon_editor_metadata = create_proxy(transon_editor_metadata)
 
 js.init(dumps(get_all_docs()))

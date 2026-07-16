@@ -33,6 +33,7 @@ export function EditorView({
         >
             <TransonEditor
                 host={{ engine, examples: cases }}
+                metadataSource="engine"
                 template={example.template}
                 input={example.data}
                 autorun

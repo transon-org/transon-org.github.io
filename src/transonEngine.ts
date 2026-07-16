@@ -19,6 +19,7 @@ interface GlueGlobals {
   transon_validate?: PyCallable;
   transon_transform?: PyCallable;
   transon_version?: PyCallable;
+  transon_editor_metadata?: PyCallable;
 }
 
 function glue(): GlueGlobals {
@@ -98,6 +99,20 @@ export function createSharedPyScriptEngine(): EngineProvider {
         engine: string;
         metadata: string;
       };
+    },
+    async getEditorMetadata(): Promise<Json> {
+      // RFC-007/FR-139 (metadata-contract §3): proxy the engine's get_editor_metadata() verbatim.
+      // A missing glue function (stale cached script.py) or a Python-side error rejects here,
+      // which is exactly the editor's FR-140 fallback path: snapshot surface + diagnostic.
+      const out = JSON.parse(require('transon_editor_metadata')() as string) as {
+        status: string;
+        metadata?: Json;
+        error_message?: string;
+      };
+      if (out.status !== 'ok') {
+        throw new Error(out.error_message ?? 'engine editor-metadata export failed');
+      }
+      return out.metadata as Json;
     },
     dispose(): void {
       // No-op: the interpreter is the docs page's shared PyScript runtime, never torn down here.
