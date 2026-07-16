@@ -1,4 +1,4 @@
-# PyScript config. `transon>=0.1.7` is required by the visual editor's forward-projection codec
-# (engine recursion-budget fix R-32); the docs rendering uses the same install. micropip honors the
-# version specifier when fetching from PyPI (RFC-005 B1).
-packages = ["transon>=0.1.7"]
+# PyScript config. `transon>=0.1.8` picks up the R-33 built-in function library (and still
+# satisfies the visual editor codec's R-32 recursion-budget floor). The docs rendering uses
+# the same install. micropip honors the version specifier when fetching from PyPI (RFC-005 B1).
+packages = ["transon>=0.1.8"]
