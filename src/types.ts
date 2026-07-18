@@ -113,3 +113,28 @@ export interface IResolvedDocs {
     operators: IOperatorDoc[];
     functions: IFunctionDoc[];
 }
+
+// Language Reference export (engine `get_language_reference()`, RFC 0008 / R-36).
+export interface IReferenceSection {
+    id: string;
+    title: string;
+    heading_level: number | null;
+    content: string;
+}
+
+export interface ILanguageReference {
+    reference_version: string;
+    engine_version?: string | null;
+    format: string;
+    content: string;
+    sections: IReferenceSection[];
+}
+
+// Envelope delivered by public/script.py's `js.init` (D-20): the docs payload
+// plus the Language Reference and the engine README (wheel metadata long
+// description) from the same installed engine version.
+export interface IInitPayload {
+    docs: IDocsData;
+    reference?: ILanguageReference | null;
+    readme?: string | null;
+}

@@ -19,6 +19,30 @@ try:
 except Exception:  # pragma: no cover - older engines
     get_editor_metadata = None
 
+try:
+    from transon.reference import get_language_reference
+except Exception:  # pragma: no cover - engines before 0.2.0 (RFC 0008)
+    get_language_reference = None
+
+
+def _engine_readme():
+    """The installed engine's README — the wheel-metadata long description.
+
+    The engine README owns the pitch/install/comparison prose (RFC 0008); reading
+    it from the installed distribution keeps the landing on the exact version the
+    playground runs. Degrades to None on engines/metadata without it (D-20).
+    """
+    try:
+        import importlib.metadata
+        meta = importlib.metadata.metadata("transon")
+        payload = meta.get_payload() if hasattr(meta, "get_payload") else None
+        if payload and payload.strip():
+            return payload
+    except Exception:
+        pass
+    return None
+
+
 loads = json.loads
 
 
@@ -148,4 +172,10 @@ js.transon_transform = create_proxy(transon_transform)
 js.transon_version = create_proxy(transon_version)
 js.transon_editor_metadata = create_proxy(transon_editor_metadata)
 
-js.init(dumps(get_all_docs()))
+# D-20 envelope: docs + the Language Reference + the engine README, all from the
+# one installed engine version (src/index.tsx unpacks it).
+js.init(dumps({
+    "docs": get_all_docs(),
+    "reference": get_language_reference() if get_language_reference else None,
+    "readme": _engine_readme(),
+}))

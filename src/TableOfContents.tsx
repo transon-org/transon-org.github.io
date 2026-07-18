@@ -1,19 +1,33 @@
-import { IResolvedDocs } from './types';
+import { ILanguageReference, IResolvedDocs } from './types';
 
 type ITableOfContentsProps = Pick<IResolvedDocs, 'rules' | 'operators' | 'functions'> & {
     workedExamples?: IResolvedDocs['worked_examples'];
     recipes?: IResolvedDocs['recipes'];
     errors?: IResolvedDocs['errors'];
+    reference?: ILanguageReference | null;
+    hasEmbedding?: boolean;
 };
 
 export function TableOfContents(props: ITableOfContentsProps) {
-    const { rules, operators, functions, workedExamples, recipes, errors } = props;
+    const { rules, operators, functions, workedExamples, recipes, errors, reference, hasEmbedding } = props;
     return (
         <nav className="toc mb-3" aria-label="Reference index">
             <h3>Reference</h3>
             <div className="toc-section">
                 <a href="#comparison" className="toc-heading">Comparison</a>
             </div>
+            {reference && reference.sections.length > 0 && (
+                <div className="toc-section">
+                    <a href="#language" className="toc-heading">Language reference</a>
+                    {reference.sections.filter((section) => section.title).map((section) =>
+                        <a
+                            key={section.id}
+                            href={`#lang-${section.id}`}
+                            className="toc-link"
+                        >{section.title}</a>
+                    )}
+                </div>
+            )}
             {workedExamples && workedExamples.length > 0 && (
                 <div className="toc-section">
                     <a href="#worked-examples" className="toc-heading">Worked examples</a>
@@ -61,6 +75,11 @@ export function TableOfContents(props: ITableOfContentsProps) {
                             className="toc-link"
                         >{func.function.name}</a>
                     )}
+                </div>
+            )}
+            {hasEmbedding && (
+                <div className="toc-section">
+                    <a href="#embedding" className="toc-heading">Embedding (Python API)</a>
                 </div>
             )}
         </nav>

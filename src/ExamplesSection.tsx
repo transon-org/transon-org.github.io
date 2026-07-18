@@ -14,7 +14,7 @@ export function ExamplesSection(props: IExampleSectionProps) {
     }
     return (
         <>
-            <dl className="examples-buttons-group d-flex mb-0">
+            <dl className="examples-buttons-group rule d-flex mb-0">
                 <dt><h6>Examples:</h6></dt>
                 <dd className="examples-buttons ms-1 mt-1">
                     {props.examples.map((example) =>

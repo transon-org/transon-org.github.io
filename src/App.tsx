@@ -1,21 +1,22 @@
 import { useMemo, useState } from 'react';
 import './App.css';
-import { IDocsData, IExampleData } from './types';
+import { IExampleData, IInitPayload } from './types';
 import { resolveDocs } from './resolve';
 import { ExamplesContext } from './ExamplesContext';
 import { EditorView } from './EditorView';
 import { createSharedPyScriptEngine } from './transonEngine';
-import { Markdown } from './Markdown';
 import { Rule } from './Rule';
 import { Operator } from './Operator';
 import { Function } from './Function';
 import { TableOfContents } from './TableOfContents';
-import { Comparison } from './Comparison';
+import { Landing } from './Landing';
+import { LanguageReference } from './LanguageReference';
+import { Embedding } from './Embedding';
 import { WorkedExamples } from './WorkedExamples';
 import { Recipes } from './Recipes';
 import { ErrorModel } from './ErrorModel';
 
-function App(props: IDocsData) {
+function App(props: IInitPayload) {
   const [activeExample, updateActiveExample] = useState<string | undefined>();
   // The example currently opened in the embedded visual editor (RFC-005), or null for the docs view.
   const [editorExample, setEditorExample] = useState<IExampleData | null>(null);
@@ -23,14 +24,14 @@ function App(props: IDocsData) {
   const engine = useMemo(() => createSharedPyScriptEngine(), []);
   // Engine docs arrive normalized (flat example corpus + name references,
   // Roadmap R-31); resolve once into the inlined shape the components render.
-  const docs = useMemo(() => resolveDocs(props), [props]);
+  const docs = useMemo(() => resolveDocs(props.docs), [props.docs]);
 
   if (editorExample) {
     return (
       <EditorView
         engine={engine}
         example={editorExample}
-        examples={props.examples}
+        examples={props.docs.examples}
         onBack={() => setEditorExample(null)}
       />
     );
@@ -49,12 +50,14 @@ function App(props: IDocsData) {
       <p>
         <span>Homogeneous JSON template engine </span>
         {
-          props.version && (
-            <u>version <b>{props.version}</b></u>
+          props.docs.version && (
+            <u>version <b>{props.docs.version}</b></u>
           )
         }
       </p>
-      <Markdown>{props.doc}</Markdown>
+      {/* D-20: landing from the engine README (pitch owner); the Language
+          Reference and the Embedding page come from the same installed engine. */}
+      <Landing readme={props.readme} />
       <ExamplesContext.Provider value={{
         activeExample: activeExample,
         updateActiveExample: updateActiveExample,
@@ -67,8 +70,10 @@ function App(props: IDocsData) {
           workedExamples={docs.worked_examples}
           recipes={docs.recipes}
           errors={docs.errors}
+          reference={props.reference}
+          hasEmbedding={Boolean(props.docs.doc)}
         />
-        <Comparison />
+        <LanguageReference reference={props.reference} />
         <WorkedExamples examples={docs.worked_examples} />
         <Recipes recipes={docs.recipes} />
         <ErrorModel errors={docs.errors} />
@@ -100,6 +105,7 @@ function App(props: IDocsData) {
             </div>
           </>
         )}
+        <Embedding doc={props.docs.doc} />
       </ExamplesContext.Provider>
     </div>
   );
