@@ -4,6 +4,9 @@ dl.rule {
 
 dl.rule dt {
   display: table;
+}
+
+.examples-buttons-group dt {
   margin-top: 9px;
 }
 
