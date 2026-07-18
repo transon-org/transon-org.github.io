@@ -4,3 +4,10 @@
 # library and the visual editor codec's R-32 recursion-budget floor. The docs rendering uses
 # the same install. micropip honors the version specifier when fetching from PyPI (RFC-005 B1).
 packages = ["transon>=0.2.0"]
+
+# The pin is a floating `>=`, so package caching must be OFF: PyScript's default cache
+# reuses previously downloaded wheels across visits (browser site storage, not the HTTP
+# cache), which pinned returning visitors to the engine version of their first visit —
+# no refresh short of clearing site storage picked up a new release. The transon wheel
+# is tiny next to the Pyodide runtime, so re-resolving against PyPI per load is cheap.
+packages_cache = "never"
