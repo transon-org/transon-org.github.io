@@ -5,13 +5,15 @@
 // pointed at the shared runtime. dispose() is a no-op: the interpreter is owned by the docs page.
 
 import type {
+  EditorDocs,
   EngineProvider,
   ExecutionResult,
   ExampleCase,
   Json,
   ValidationResult,
 } from '@transon/editor-react';
-import { IExampleData } from './types';
+import { buildExampleCorpusFromDocs } from '@transon/editor-react';
+import { IDocsData } from './types';
 
 type PyCallable = (...args: unknown[]) => unknown;
 
@@ -120,14 +122,28 @@ export function createSharedPyScriptEngine(): EngineProvider {
   };
 }
 
-/** Map the docs corpus (engine `get_all_docs().examples`) to the editor's ExampleCase shape. */
-export function toExampleCases(examples: IExampleData[]): ExampleCase[] {
-  return examples.map((e) => ({
-    name: e.name,
-    doc: e.doc,
-    tags: e.tags,
-    template: e.template as Json,
-    data: (e.data ?? undefined) as Json | undefined,
-    result: (e.result ?? undefined) as Json | undefined,
-  }));
+/**
+ * Derive the embedded editor's example corpus from the engine `get_all_docs()` payload via the
+ * editor's own `buildExampleCorpusFromDocs` (FR-132, editor-react 0.2.1). This keeps the
+ * `rule`/`tier` joins the tiered picker groups by — the previous hand-mapping dropped them, so
+ * the embed rendered every case under one "Reference · other" group with colliding labels. Only
+ * the rule-entry shape is unwrapped (`{rule:{name}, examples, params:[{param:{name}, examples}]}`
+ * → `{name, examples, params:[{name, examples}]}`); the reference lists themselves stay verbatim
+ * — the engine already folds operator/function example refs into `expr`/`call`, so the wire refs
+ * match the editor-metadata refs exactly.
+ */
+export function toExampleCases(docs: IDocsData): ExampleCase[] {
+  const editorDocs = {
+    examples: docs.examples,
+    worked_examples: docs.worked_examples ?? [],
+    recipes: docs.recipes ?? [],
+    rules: docs.rules.map((r) => ({
+      name: r.rule.name,
+      examples: r.examples,
+      params: (r.params ?? []).map((p) => ({ name: p.param.name, examples: p.examples })),
+    })),
+    operators: [],
+    functions: [],
+  } as unknown as EditorDocs;
+  return buildExampleCorpusFromDocs(editorDocs);
 }

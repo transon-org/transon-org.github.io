@@ -32,7 +32,7 @@ function App(props: IInitPayload) {
       <EditorView
         engine={engine}
         example={editorExample}
-        examples={props.docs.examples}
+        docs={props.docs}
         onBack={() => setEditorExample(null)}
       />
     );
