@@ -1,4 +1,6 @@
-# PyScript config. `transon>=0.1.8` picks up the R-33 built-in function library (and still
-# satisfies the visual editor codec's R-32 recursion-budget floor). The docs rendering uses
+# PyScript config. `transon>=0.2.0` picks up the RFC 0008 Language Reference release —
+# `get_language_reference()`, the slimmed embedder `doc` field, and richer per-rule docstrings
+# (engine R-34/R-35/R-36; site counterpart D-20) — and still satisfies the R-33 function
+# library and the visual editor codec's R-32 recursion-budget floor. The docs rendering uses
 # the same install. micropip honors the version specifier when fetching from PyPI (RFC-005 B1).
-packages = ["transon>=0.1.8"]
+packages = ["transon>=0.2.0"]
