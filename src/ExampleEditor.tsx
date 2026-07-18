@@ -4,7 +4,13 @@ import { Markdown } from "./Markdown";
 import { ExamplesContext } from "./ExamplesContext";
 import { IExampleData } from "./types";
 
-export function ExampleEditor(props: IExampleData) {
+interface IExampleEditorProps extends IExampleData {
+    // The scroll-into-view-on-mount behavior suits click-opened examples; the
+    // always-open landing Hero opts out so page load isn't scroll-hijacked.
+    autoScroll?: boolean;
+}
+
+export function ExampleEditor(props: IExampleEditorProps) {
     const { openInEditor } = useContext(ExamplesContext);
     const ref = useRef<HTMLDivElement>(null);
     const monacoInputRef = useRef(null);
@@ -27,6 +33,7 @@ export function ExampleEditor(props: IExampleData) {
     // scrolls, so we never fight them. Instant re-aligns are imperceptible; the example simply stays
     // put as the page settles. ("instant" is a valid runtime ScrollBehavior; TS 4.9's lib predates it.)
     useEffect(() => {
+        if (props.autoScroll === false) return;
         const el = ref.current;
         if (!el) return;
         // Pin the example to the BOTTOM of the viewport (the original, correct end state: whole

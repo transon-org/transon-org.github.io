@@ -16,6 +16,16 @@ export function TableOfContents(props: ITableOfContentsProps) {
             <div className="toc-section">
                 <a href="#comparison" className="toc-heading">Comparison</a>
             </div>
+            {workedExamples && workedExamples.length > 0 && (
+                <div className="toc-section">
+                    <a href="#worked-examples" className="toc-heading">Worked examples</a>
+                </div>
+            )}
+            {recipes && recipes.length > 0 && (
+                <div className="toc-section">
+                    <a href="#recipes" className="toc-heading">Recipes</a>
+                </div>
+            )}
             {reference && reference.sections.length > 0 && (
                 <div className="toc-section">
                     <a href="#language" className="toc-heading">Language reference</a>
@@ -26,16 +36,6 @@ export function TableOfContents(props: ITableOfContentsProps) {
                             className="toc-link"
                         >{section.title}</a>
                     )}
-                </div>
-            )}
-            {workedExamples && workedExamples.length > 0 && (
-                <div className="toc-section">
-                    <a href="#worked-examples" className="toc-heading">Worked examples</a>
-                </div>
-            )}
-            {recipes && recipes.length > 0 && (
-                <div className="toc-section">
-                    <a href="#recipes" className="toc-heading">Recipes</a>
                 </div>
             )}
             {errors && errors.length > 0 && (

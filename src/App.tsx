@@ -10,6 +10,7 @@ import { Operator } from './Operator';
 import { Function } from './Function';
 import { TableOfContents } from './TableOfContents';
 import { Landing } from './Landing';
+import { Hero } from './Hero';
 import { LanguageReference } from './LanguageReference';
 import { Embedding } from './Embedding';
 import { WorkedExamples } from './WorkedExamples';
@@ -63,6 +64,7 @@ function App(props: IInitPayload) {
         updateActiveExample: updateActiveExample,
         openInEditor: setEditorExample
       }}>
+        <Hero examples={props.docs.examples} />
         <TableOfContents
           rules={docs.rules}
           operators={docs.operators}
@@ -73,9 +75,10 @@ function App(props: IInitPayload) {
           reference={props.reference}
           hasEmbedding={Boolean(props.docs.doc)}
         />
-        <LanguageReference reference={props.reference} />
+        {/* Learning order: examples first, semantics after (newcomer funnel). */}
         <WorkedExamples examples={docs.worked_examples} />
         <Recipes recipes={docs.recipes} />
+        <LanguageReference reference={props.reference} />
         <ErrorModel errors={docs.errors} />
         <h3 id="rules">Rules</h3>
         <div>
