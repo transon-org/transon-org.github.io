@@ -1888,7 +1888,7 @@
 
 "@transon/editor-react@https://github.com/transon-org/transon-blockly/releases/download/v0.2.0/transon-editor-react-0.2.0.tgz":
   version "0.2.0"
-  resolved "https://github.com/transon-org/transon-blockly/releases/download/v0.2.0/transon-editor-react-0.2.0.tgz#5930ee33dae90832b47bb5437825c957a0d6310f"
+  resolved "https://github.com/transon-org/transon-blockly/releases/download/v0.2.0/transon-editor-react-0.2.0.tgz#bed32daefcf3906aed626a3fb476e27163274b3c"
   dependencies:
     "@blockly/workspace-minimap" "13.1.0"
     "@blockly/zoom-to-fit" "13.1.0"
