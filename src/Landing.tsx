@@ -22,11 +22,15 @@ interface ILandingSection {
 
 export function splitReadme(readme: string): { preamble: string; sections: ILandingSection[] } {
     const lines = readme.replace(/\r\n?/g, '\n').split('\n');
-    // Drop the repo H1 title and badge images — the app renders its own header.
+    // Drop the repo H1 title, badge images, and the blockquote tagline — the app
+    // renders its own header/tagline, so none of them should repeat below it.
     let start = 0;
     while (
         start < lines.length &&
-        (lines[start] === '' || lines[start].startsWith('# ') || lines[start].startsWith('!['))
+        (lines[start] === '' ||
+            lines[start].startsWith('# ') ||
+            lines[start].startsWith('![') ||
+            lines[start].startsWith('> '))
     ) {
         start += 1;
     }
